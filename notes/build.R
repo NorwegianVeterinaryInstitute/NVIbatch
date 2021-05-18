@@ -63,6 +63,6 @@ with_libpaths(paste0(Rlibrary,"/library"),
 #                  repos = NULL,
 #                  type = "binary")
 
-# help(package = pkg)
+help(package = (pkg))
 library(package = pkg, character.only = TRUE)
 
