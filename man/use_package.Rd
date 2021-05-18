@@ -9,7 +9,10 @@ use_package(pkg, repos = "https://cran.uib.no/", ...)
 \arguments{
 \item{pkg}{The name of the package.}
 
-\item{repos}{Cran repository}
+\item{repos}{character vector, the base URL(s) of the repositories to use,
+e.g., the URL of a CRAN mirror such as "https://cloud.r-project.org". Can
+be NULL to install from local files, directories or URLs: this will be
+inferred by extension from pkgs if of length one.}
 
 \item{\dots}{Other arguments to be passed to install.packages.}
 }

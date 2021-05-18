@@ -4,7 +4,10 @@
 #'     is attached using library.
 #' @details Only packages available at Cran can be installed.
 #' @param pkg The name of the package.
-#' @param repos Cran repository
+#' @param repos character vector, the base URL(s) of the repositories to use,
+#'     e.g., the URL of a CRAN mirror such as "https://cloud.r-project.org". Can
+#'     be NULL to install from local files, directories or URLs: this will be
+#'     inferred by extension from pkgs if of length one.
 #' @param \dots	Other arguments to be passed to install.packages.
 #' @export
 #' @examples
