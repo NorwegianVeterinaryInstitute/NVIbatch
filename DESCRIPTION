@@ -16,7 +16,8 @@ License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-    checkmate
+    checkmate,
+    utils
 Suggests:
     devtools,
     remotes,
