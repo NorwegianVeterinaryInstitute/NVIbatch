@@ -2,7 +2,7 @@
 % Please edit documentation in R/use_package.R
 \name{use_package}
 \alias{use_package}
-\title{Install and attach a package available at Cran}
+\title{Attach and if necessary install a package}
 \usage{
 use_package(pkg, repos = "https://cran.uib.no/", ...)
 }

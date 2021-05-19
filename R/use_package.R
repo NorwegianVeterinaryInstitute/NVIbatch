@@ -1,4 +1,4 @@
-#' @title Install and attach a package available at Cran
+#' @title Attach and if necessary install a package
 #' @description First, use_package checks if the package is installed. If not
 #'     already installed, the package will be installed. Thereafter, the package
 #'     is attached using library.
