@@ -1,0 +1,8 @@
+NVIbatch 0.1.0 - (2021-05-19)
+--------------------------
+
+  First release:
+
+  - use_package Attach and if necessary install a package. The package needs to be available at Cran to be installed.
+
+  - gather_messages Gather error and warning messages from the Rout-file.
