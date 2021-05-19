@@ -40,29 +40,3 @@ devtools::check_built(path = paste0("../", pkg, "_", version, ".tar.gz"), args =
 #              shQuote(paste0(Rlibrary,"/library/NVIdb"))))
 
 
-# Install rebuilt package
-# The package must be detached to install it.
-pkgname <- paste0("package:", pkg)
-detach(pkgname, unload=TRUE, character.only = TRUE)
-
-
-with_libpaths(paste0(Rlibrary,"/library"),
-              install(sub("notes", "", dirname(rstudioapi::getSourceEditorContext()$path)),
-                      dependencies = TRUE,
-                      upgrade=FALSE,
-                      build_vignettes = TRUE)
-)
-
-# # Install from binary file
-# remove.packages("NVIdb")
-# install.packages(pkgs = paste0(getwd(), "/..", "/NVIdb_", version, ".tar.gz"),
-#                  type = "source",
-#                  repos = NULL)
-
-# install.packages(paste0(getwd(), "/..", "/NVIdb_", version, ".zip"),
-#                  repos = NULL,
-#                  type = "binary")
-
-help(package = (pkg))
-library(package = pkg, character.only = TRUE)
-
