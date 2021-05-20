@@ -1,3 +1,15 @@
+NVIbatch 0.1.1 - (2021-05-20)
+--------------------------
+
+  Bug fixes:
+
+  - gather_messages now accepts `NULL` for `remove_allowed` and `remove_after`.
+
+  Breacking changes:
+
+  - renamed to use_pkg to avoid conflict with usethis::use_package
+
+
 NVIbatch 0.1.0 - (2021-05-19)
 --------------------------
 

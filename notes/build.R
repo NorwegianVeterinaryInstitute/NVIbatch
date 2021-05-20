@@ -1,9 +1,10 @@
-# TEST, DOCUMENT AND BUILD the PACKAGE
-
-pkg <- "NVIbatch"
+# DOCUMENT, TEST AND BUILD THE PACKAGE
 
 # Set up environment
 # rm(list = ls())    # Benyttes for å tømme R-environment ved behov
+
+pkg <- "NVIbatch"
+
 Rlibrary <- R.home()
 
 library(devtools)
@@ -14,7 +15,7 @@ library(withr)
 # Should be run before git push when documentation for functions have been changed
 devtools::document()
 
-# Run tests included in ./tests. NVIdb use testthat
+# Run tests included in ./tests.
 devtools::test()
 
 # Build the vignette
@@ -39,30 +40,4 @@ devtools::check_built(path = paste0("../", pkg, "_", version, ".tar.gz"), args =
 #              "Rd2pdf",
 #              shQuote(paste0(Rlibrary,"/library/NVIdb"))))
 
-
-# Install rebuilt package
-# The package must be detached to install it.
-pkgname <- paste0("package:", pkg)
-detach(pkgname, unload=TRUE, character.only = TRUE)
-
-
-with_libpaths(paste0(Rlibrary,"/library"),
-              install(sub("notes", "", dirname(rstudioapi::getSourceEditorContext()$path)),
-                      dependencies = TRUE,
-                      upgrade=FALSE,
-                      build_vignettes = TRUE)
-)
-
-# # Install from binary file
-# remove.packages("NVIdb")
-# install.packages(pkgs = paste0(getwd(), "/..", "/NVIdb_", version, ".tar.gz"),
-#                  type = "source",
-#                  repos = NULL)
-
-# install.packages(paste0(getwd(), "/..", "/NVIdb_", version, ".zip"),
-#                  repos = NULL,
-#                  type = "binary")
-
-help(package = (pkg))
-library(package = pkg, character.only = TRUE)
 

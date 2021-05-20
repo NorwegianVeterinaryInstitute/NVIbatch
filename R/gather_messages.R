@@ -27,7 +27,24 @@
 gather_messages <- function(filename,
                             remove_allowed = c("was built under R version"),
                             remove_after = "Ferdig Batch") {
-  #Reads the Rout-file (logfile)
+
+  # ARGUMENT CHECKING ----
+  # Object to store check-results
+  checks <- checkmate::makeAssertCollection()
+
+  # Perform checks
+  checkmate::assert_file_exists(filename, access = "r")
+
+  checkmate::assert_character(remove_allowed, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
+
+  checkmate::assert_character(remove_after, len = 1, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
+
+  # Report check-results
+  checkmate::reportAssertions(checks)
+
+
+  # RUNNING SCRIPT ----
+  # Reads the Rout-file (logfile)
   logfile <- readLines(con = filename)
 
 
@@ -46,24 +63,30 @@ gather_messages <- function(filename,
   message_lines<-message_lines[order(message_lines)]
 
   # Identifies lines with allowed warnings
-  for (i in 1:length(remove_allowed)) {
-    allowed <- grep(remove_allowed[i], logfile)
-    if (i == 1) {
-      allowed_lines <- allowed
-    } else {
-      allowed_lines <- c(allowed_lines, allowed)
+  if(!is.null(remove_allowed) && trimws(remove_allowed) != "") {
+    for (i in 1:length(remove_allowed)) {
+      allowed <- grep(remove_allowed[i], logfile)
+      if (i == 1) {
+        allowed_lines <- allowed
+      } else {
+        allowed_lines <- c(allowed_lines, allowed)
+      }
     }
+    # Allows the line with allowed warning and the previous line
+    allowed_lines <- c(allowed_lines, allowed_lines - 1)
   }
-  # Allows the line with allowed warning and the previous line
-  allowed_lines <- c(allowed_lines, allowed_lines - 1)
+  if (!exists("allowed_lines")) {allowed_lines <- 1}
 
   # Removes messages after a defined tag that can be set with print()
-  finished <- min(grep(remove_after, logfile))
-
-  if (length(finished) > 0) {
-    allowed_lines <- c(allowed_lines, finished:length(logfile))
+  if(!is.null(remove_after) && trimws(remove_after) != "") {
+    finished <- grep(remove_after, logfile)
   }
-
+  if (exists("finished")) {
+    if (length(finished) > 0) {
+      finished <- min(finished)
+      allowed_lines <- c(allowed_lines, finished:length(logfile))
+    }
+  }
   # Removes allowed_lines from the gathered errors and warnings
   message_lines <- message_lines[which(!message_lines %in% allowed_lines)]
 
