@@ -11,9 +11,9 @@
 #' @param \dots	Other arguments to be passed to install.packages.
 #' @export
 #' @examples
-#' use_package("checkmate")
+#' use_pkg("checkmate")
 
-use_package <- function(pkg, repos = "https://cran.uib.no/", ...) {
+use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
   if (!nchar(system.file(package = pkg)))  {
     utils::install.packages(pkgs = pkg, repos = repos, ...)
   }
