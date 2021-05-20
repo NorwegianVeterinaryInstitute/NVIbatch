@@ -1,9 +1,10 @@
-# TEST, DOCUMENT AND BUILD the PACKAGE
-
-pkg <- "NVIbatch"
+# DOCUMENT, TEST AND BUILD THE PACKAGE
 
 # Set up environment
 # rm(list = ls())    # Benyttes for å tømme R-environment ved behov
+
+pkg <- "NVIbatch"
+
 Rlibrary <- R.home()
 
 library(devtools)
@@ -14,7 +15,7 @@ library(withr)
 # Should be run before git push when documentation for functions have been changed
 devtools::document()
 
-# Run tests included in ./tests. NVIdb use testthat
+# Run tests included in ./tests.
 devtools::test()
 
 # Build the vignette
