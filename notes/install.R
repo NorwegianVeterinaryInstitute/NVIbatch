@@ -4,11 +4,15 @@
 
 pkg <- "NVIbatch"
 
+# DETACH PACKAGE ----
 # The package must be detached to install it.
-pkgname <- paste0("package:", pkg)
-detach(pkgname, unload=TRUE, character.only = TRUE)
+if(pkg %in% (.packages())){
+  pkgname <- paste0("package:", pkg)
+  detach(pkgname, unload=TRUE, character.only = TRUE)
+}
 
 
+# INSTALL PACKAGE ----
 # Install from working directory
 with_libpaths(paste0(Rlibrary,"/library"),
               install(sub("notes", "", dirname(rstudioapi::getSourceEditorContext()$path)),
@@ -43,7 +47,10 @@ remotes::install_github(paste0("PetterHopp/", pkg),
 #                  repos = NULL,
 #                  type = "binary")
 
+
+# ATTACH PACKAGE ----
 help(package = (pkg))
+
 library(package = pkg, character.only = TRUE)
 
 # install.packages(paste0(NVIconfig:::path_NVI["NVIverse"], "/NVIdb/Arkiv/NVIdb_0.1.7.zip"),
