@@ -4,6 +4,10 @@
 
 pkg <- "NVIbatch"
 
+Rlibrary <- R.home()
+
+library(withr)
+
 # DETACH PACKAGE ----
 # The package must be detached to install it.
 if(pkg %in% (.packages())){
@@ -15,8 +19,8 @@ if(pkg %in% (.packages())){
 # INSTALL PACKAGE ----
 # Install from working directory
 with_libpaths(paste0(Rlibrary,"/library"),
-              install(sub("notes", "", dirname(rstudioapi::getSourceEditorContext()$path)),
-                      dependencies = TRUE,
+              devtools::install(sub("notes", "", dirname(rstudioapi::getSourceEditorContext()$path)),
+                      dependencies = c("Depends", "Imports", "LinkingTo"),
                       upgrade=FALSE,
                       build_vignettes = TRUE)
 )
@@ -37,13 +41,13 @@ remotes::install_github(paste0("PetterHopp/", pkg),
                         build_vignettes = TRUE)
 
 
-# # Install from binary file
-# remove.packages("NVIdb")
-# install.packages(pkgs = paste0(getwd(), "/..", "/NVIdb_", version, ".tar.gz"),
-#                  type = "source",
-#                  repos = NULL)
-
-# install.packages(paste0(getwd(), "/..", "/NVIdb_", version, ".zip"),
+# # Install from source file in catalog "NVIverse"
+# install.packages(pkgs = paste0(NVIconfig:::path_NVI["NVIverse"], "/", pkg, "/Arkiv/", pkg, "_", version, ".tar.gz"),
+#                  repos = NULL,
+#                  type = "source")
+#
+# # Install from binary file in catalog "NVIverse"
+# install.packages(pkgs = paste0(NVIconfig:::path_NVI["NVIverse"], "/", pkg, "/Arkiv/", pkg, "_", version, ".zip"),
 #                  repos = NULL,
 #                  type = "binary")
 
@@ -53,7 +57,4 @@ help(package = (pkg))
 
 library(package = pkg, character.only = TRUE)
 
-# install.packages(paste0(NVIconfig:::path_NVI["NVIverse"], "/NVIdb/Arkiv/NVIdb_0.1.7.zip"),
-#                  repos = NULL,
-#                  type = "binary")
 
