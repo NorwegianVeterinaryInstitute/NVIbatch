@@ -3,7 +3,7 @@
 #'     already installed, the package will be installed. Thereafter, the package
 #'     is attached using library.
 #' @details Only packages available at Cran can be installed.
-#' @param pkg The name of the package.
+#' @param pkg A vector with the name of one or more packages.
 #' @param repos character vector, the base URL(s) of the repositories to use,
 #'     e.g., the URL of a CRAN mirror such as "https://cloud.r-project.org". Can
 #'     be NULL to install from local files, directories or URLs: this will be
@@ -12,10 +12,27 @@
 #' @export
 #' @examples
 #' use_pkg("checkmate")
+#' use_pkg(pkg = c("checkmate", "devtools"))
 
 use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
-  if (!nchar(system.file(package = pkg)))  {
-    utils::install.packages(pkgs = pkg, repos = repos, ...)
+
+  # ARGUMENT CHECKING ----
+  # Object to store check-results
+  checks <- checkmate::makeAssertCollection()
+
+  # Perform checks
+  checkmate::assert_character(pkg, min.chars = 1, any.missing = FALSE, min.len = 1, add = checks)
+
+  checkmate::assert_character(repos, max.len = 1, null.ok = TRUE, add = checks)
+
+  # Report check-results
+  checkmate::reportAssertions(checks)
+
+  # RUNNING SCRIPT ----
+  for (i in length(pkg)) {
+    if (!nchar(system.file(package = pkg[i])))  {
+      utils::install.packages(pkgs = pkg[i], repos = repos, ...)
+    }
+    library (package = pkg[i], character.only = TRUE)
   }
-  library (package = pkg, character.only = TRUE)
 }

@@ -7,7 +7,7 @@
 use_pkg(pkg, repos = "https://cran.uib.no/", ...)
 }
 \arguments{
-\item{pkg}{The name of the package.}
+\item{pkg}{A vector with the name of one or more packages.}
 
 \item{repos}{character vector, the base URL(s) of the repositories to use,
 e.g., the URL of a CRAN mirror such as "https://cloud.r-project.org". Can
@@ -26,4 +26,5 @@ Only packages available at Cran can be installed.
 }
 \examples{
 use_pkg("checkmate")
+use_pkg(pkg = c("checkmate", "devtools"))
 }
