@@ -3,10 +3,14 @@ NVIbatch 0.1.1.9000 - (2021-0#-##)
 
   New features:
 
+  - use_pkg now accepts a character vector with package names as input
+
 
   Other changes:
 
   - Vignette for Contributing to NVIbatch
+
+  - Improved argument checking
 
 
 NVIbatch 0.1.1 - (2021-05-20)
@@ -15,6 +19,7 @@ NVIbatch 0.1.1 - (2021-05-20)
   Bug fixes:
 
   - gather_messages now accepts `NULL` for `remove_allowed` and `remove_after`.
+
 
   Breacking changes:
 
