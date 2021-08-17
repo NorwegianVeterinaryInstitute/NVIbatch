@@ -22,9 +22,12 @@ Imports:
     utils
 Suggests:
     devtools,
+    knitr,
     remotes,
     roxygen2,
     testthat,
     withr
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
+Language: en-GB
 RoxygenNote: 7.1.1
