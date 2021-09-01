@@ -19,14 +19,17 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    utils
+    remotes,
+    utils,
+    NVIcheckmate
 Suggests:
     devtools,
     knitr,
-    remotes,
     roxygen2,
     testthat,
     withr
+Remotes:
+    NorwegianVeterinaryInstitute/NVIcheckmate
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Language: en-GB
