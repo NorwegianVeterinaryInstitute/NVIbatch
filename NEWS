@@ -3,7 +3,9 @@ NVIbatch 0.1.1.9000 - (2021-0#-##)
 
   New features:
 
-  - use_pkg now accepts a character vector with package names as input
+  - use_NVIverse will attach and if necessary install a package within NVIverse.
+
+  - use_pkg now accepts a character vector with package names as input.
 
 
   Other changes:
