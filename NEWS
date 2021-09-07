@@ -1,9 +1,27 @@
+NVIbatch 0.2.0 - (2021-09-07)
+--------------------------
+
+  New features:
+
+  - use_NVIverse will attach and if necessary install a package within NVIverse. Accepts a vector of package names.
+
+  - use_pkg now accepts a character vector with package names as input.
+
+
+  Other changes:
+
+  - Vignette for Contributing to NVIbatch
+
+  - Improved argument checking
+
+
 NVIbatch 0.1.1 - (2021-05-20)
 --------------------------
 
   Bug fixes:
 
   - gather_messages now accepts `NULL` for `remove_allowed` and `remove_after`.
+
 
   Breacking changes:
 
