@@ -39,32 +39,69 @@ use_NVIverse <- function(pkg,
                          build_vignettes = TRUE,
                          ... ) {
   # ARGUMENT CHECKING ----
+  # Check that NVIcheckmate is installed to avoid using NVIcheckmate functions if not installed
+  NVIcheckmate_installed <- FALSE
+  if (nchar(system.file(package = "NVIcheckmate")))  {NVIcheckmate_installed <- TRUE}
+
   # Object to store check-results
   checks <- checkmate::makeAssertCollection()
 
   # Perform checks
-  # package
+  # pkg
   checkmate::assert_subset(pkg,
-                           choices = c("NVIbatch", "NVIconfig", "NVIdb", "NVIpretty", "NVIcheckmate", "OKplan", "OKcheck"),
+                           choices = c("NVIconfig", "NVIbatch", "NVIcheckmate", "NVIdb", "NVIpretty",
+                                       "OKplan", "OKcheck"),
                            add = checks)
-  # PAT
-  checkmate::assert_character(auth_token, null.ok = TRUE, add = checks)
-  NVIcheckmate::assert(checkmate::check_logical(dependencies),
-                       checkmate::check_subset(dependencies,
-                                               choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
-                       combine = "or",
-                       add = checks)
-  NVIcheckmate::assert(checkmate::check_logical(upgrade),
-                       checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
-                       combine = "or",
-                       add = checks)
+  # auth_token
+  if ("NVIconfig" %in% pkg & !nchar(system.file(package = "NVIconfig")))  {
+    if (NVIcheckmate_installed) {
+      NVIcheckmate::assert_character(auth_token,
+                                     len = 1,
+                                     comment = "You will need an personal authentication token to install NVIconfig",
+                                     add = checks)
+    }
+    if (!NVIcheckmate_installed) {
+      checkmate::assert_character(auth_token, len = 1, add = checks)
+    }
+  } else {
+    checkmate::assert_character(auth_token, len = 1, null.ok = TRUE, add = checks)
+
+  }
+
+  if (NVIcheckmate_installed) {
+    # dependencies
+    NVIcheckmate::assert(checkmate::check_logical(dependencies),
+                         checkmate::check_subset(dependencies,
+                                                 choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
+                         combine = "or",
+                         add = checks)
+    # upgrade
+    NVIcheckmate::assert(checkmate::check_logical(upgrade),
+                         checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
+                         combine = "or",
+                         add = checks)
+  }
+  # build
   checkmate::assert_logical(build, add = checks)
+  # build_manual
   checkmate::assert_logical(build_manual, add = checks)
+  # build_vignettes
   checkmate::assert_logical(build_vignettes, add = checks)
 
   # Report check-results
   checkmate::reportAssertions(checks)
 
+  if (!NVIcheckmate_installed) {
+    # dependencies
+    checkmate::assert(checkmate::check_logical(dependencies),
+                      checkmate::check_subset(dependencies,
+                                              choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
+                      combine = "or")
+    # upgrade
+    NVIcheckmate::assert(checkmate::check_logical(upgrade),
+                         checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
+                         combine = "or")
+  }
 
   # For NVIdb::get_PAT NVIdb::set_PAT must previously have been run at the current PC for the current user
   #   set_PAT and get_PAT are only available in NVIdb v0.1.8 and later.
@@ -72,11 +109,13 @@ use_NVIverse <- function(pkg,
 
 
   # RUN SCRIPT ----
+
   # ATTACH PACKAGE ----
-  for (i in length(pkg)) {
-    if (!nchar(system.file(package = pkg[i])))  {
-      # Install from NorwegianVeterinaryInstitute at GitHub
-      remotes::install_github(paste0("NorwegianVeterinaryInstitute/", pkg[i]),
+  # run for each package separately, library doesn't accept vectorized input
+  for (i in pkg) {
+    if (!nchar(system.file(package = i)))  {
+      # Install from NorwegianVeterinaryInstitute at GitHub if needed
+      remotes::install_github(paste0("NorwegianVeterinaryInstitute/", i),
                               auth_token = auth_token,
                               upgrade = upgrade,
                               build = build,
@@ -85,7 +124,7 @@ use_NVIverse <- function(pkg,
                               dependencies = dependencies,
                               ... )
     }
-    library (package = pkg[i], character.only = TRUE)
+    library (package = i, character.only = TRUE)
   }
 }
 
