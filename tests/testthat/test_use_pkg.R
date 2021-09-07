@@ -1,9 +1,8 @@
 library(NVIbatch)
 library(testthat)
-context("use_pkg")
 
 
-test_that("If the packages are attached", {
+test_that("Attach packages", {
 
   use_pkg("dplyr")
   expect_true("dplyr" %in% (.packages()))
