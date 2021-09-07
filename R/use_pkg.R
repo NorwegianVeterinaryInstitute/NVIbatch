@@ -29,10 +29,10 @@ use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
   checkmate::reportAssertions(checks)
 
   # RUNNING SCRIPT ----
-  for (i in length(pkg)) {
-    if (!nchar(system.file(package = pkg[i])))  {
-      utils::install.packages(pkgs = pkg[i], repos = repos, ...)
+  for (i in pkg) {
+    if (!nchar(system.file(package = i)))  {
+      utils::install.packages(pkgs = i, repos = repos, ...)
     }
-    library (package = pkg[i], character.only = TRUE)
+    library (package = i, character.only = TRUE)
   }
 }
