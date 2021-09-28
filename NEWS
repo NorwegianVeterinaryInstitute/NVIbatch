@@ -1,9 +1,11 @@
-NVIbatch 0.2.0.9000 - (2021-##-##)
+NVIbatch 0.2.1 - (2021-09-28)
 --------------------------
 
   Fixes:
 
   - use_pkg does not accept repos = NULL as input.
+  
+  - Solved problems with installation
 
 
 NVIbatch 0.2.0 - (2021-09-07)
