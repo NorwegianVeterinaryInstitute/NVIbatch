@@ -91,7 +91,7 @@ First install and attach the `devtools` package.
 
 To install (or update) the `NVIbatch` package, run the following code:
 
-    remotes::install_github(NorwegianVeterinaryInstitute/NVIbatch)
+    remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch")
         upgrade = FALSE,
         build = TRUE,
         build_manual = TRUE)
