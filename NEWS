@@ -1,10 +1,18 @@
+NVIbatch 0.2.2 - (2021-10-01)
+--------------------------
+
+  Other changes:
+
+  - Corrected installation instruction in README
+
+
 NVIbatch 0.2.1 - (2021-09-28)
 --------------------------
 
-  Fixes:
+  Bug fixes:
 
   - use_pkg does not accept repos = NULL as input.
-  
+
   - Solved problems with installation
 
 
