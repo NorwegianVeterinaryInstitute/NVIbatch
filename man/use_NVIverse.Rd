@@ -6,7 +6,7 @@
 \usage{
 use_NVIverse(
   pkg,
-  auth_token = NA,
+  auth_token = NULL,
   dependencies = NA,
   upgrade = FALSE,
   build = TRUE,
@@ -20,7 +20,7 @@ use_NVIverse(
 
 \item{auth_token}{To install NVIconfig a personal access token is needed. Generate a personal
 access token (PAT) in "https://github.com/settings/tokens" and
-supply to this argument. Defaults to \code{NA}.}
+supply to this argument. Defaults to \code{NULL}.}
 
 \item{dependencies}{The dependencies to check and eventually install. Can be
 a character vector (selecting from "Depends", "Imports", "LinkingTo",

@@ -6,7 +6,7 @@
 #' @param pkg A vector with the name of one or more NVIverse packages.
 #' @param auth_token To install NVIconfig a personal access token is needed. Generate a personal
 #'     access token (PAT) in "https://github.com/settings/tokens" and
-#'     supply to this argument. Defaults to \code{NA}.
+#'     supply to this argument. Defaults to \code{NULL}.
 #' @param dependencies The dependencies to check and eventually install. Can be
 #'     a character vector (selecting from "Depends", "Imports", "LinkingTo",
 #'     "Suggests", or "Enhances"), or a logical vector. \code{TRUE} is shorthand
