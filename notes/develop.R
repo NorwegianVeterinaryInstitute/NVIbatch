@@ -21,7 +21,7 @@ pkg_path = usethis::proj_path()
 # Should be run before git push when documentation for functions have been changed
 NVIpackager::document_NVIpkg(style = FALSE,
                              contributing = FALSE,
-                             readme = TRUE,
+                             readme = FALSE,
                              scope = c("spaces", "line_breaks"))
 
 
