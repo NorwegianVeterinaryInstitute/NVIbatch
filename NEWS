@@ -1,9 +1,17 @@
+NVIbatch 0.2.3 - (2021-11-30)
+--------------------------
+
+  Bug fixes:
+
+  - use_NVIverse now installs missing NVIpackages if argument to aut_token is missing.
+
+
 NVIbatch 0.2.2 - (2021-10-01)
 --------------------------
 
   Other changes:
 
-  - Corrected installation instruction in README
+  - Corrected installation instruction in README.
 
 
 NVIbatch 0.2.1 - (2021-09-28)
@@ -13,7 +21,7 @@ NVIbatch 0.2.1 - (2021-09-28)
 
   - use_pkg does not accept repos = NULL as input.
 
-  - Solved problems with installation
+  - Solved problems with installation.
 
 
 NVIbatch 0.2.0 - (2021-09-07)
@@ -28,9 +36,9 @@ NVIbatch 0.2.0 - (2021-09-07)
 
   Other changes:
 
-  - Vignette for Contributing to NVIbatch
+  - Vignette for Contributing to NVIbatch.
 
-  - Improved argument checking
+  - Improved argument checking.
 
 
 .9000NVIbatch 0.1.1 - (2021-05-20)
@@ -43,7 +51,7 @@ NVIbatch 0.2.0 - (2021-09-07)
 
   Breacking changes:
 
-  - renamed to use_pkg to avoid conflict with usethis::use_package
+  - renamed to use_pkg to avoid conflict with usethis::use_package.
 
 
 NVIbatch 0.1.0 - (2021-05-19)
