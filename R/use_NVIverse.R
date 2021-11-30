@@ -57,15 +57,16 @@ use_NVIverse <- function(pkg,
     if (NVIcheckmate_installed) {
       NVIcheckmate::assert_character(auth_token,
                                      len = 1,
+                                     any.missing = FALSE,
                                      null.ok = TRUE,
                                      comment = "You will need an personal authentication token to install NVIconfig",
                                      add = checks)
     }
     if (!NVIcheckmate_installed) {
-      checkmate::assert_character(auth_token, len = 1, null.ok = TRUE, add = checks)
+      checkmate::assert_character(auth_token, len = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
     }
   } else {
-    checkmate::assert_character(auth_token, len = 1, null.ok = TRUE, add = checks)
+    checkmate::assert_character(auth_token, len = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
 
   }
 
