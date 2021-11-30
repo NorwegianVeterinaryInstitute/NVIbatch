@@ -1,7 +1,7 @@
 Package: NVIbatch
 Title: Tools to facilitate the running of R-scripts in batch mode at NVI
-Version: 0.2.2
-Date: 2021-10-01
+Version: 0.2.3
+Date: 2021-11-30
 Authors@R: 
   c(person(given = "Petter",
            family = "Hopp",
@@ -10,7 +10,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-8695-0378")),
     person(given = "Norwegian Veterinary Institute",
            role = "cph"))
-Description: NVIbatch comprises functions to facilitate the writing of batch
+Description: Provides tools to facilitate the writing of batch
     R-scripts that should be run automatically at specific times.
 URL: https://github.com/NorwegianVeterinaryInstitute/NVIbatch
 BugReports: https://github.com/NorwegianVeterinaryInstitute/NVIbatch/issues
@@ -28,9 +28,10 @@ Suggests:
     rmarkdown,
     roxygen2,
     testthat,
-    withr
+    NVIpackager
 Remotes:
-    NorwegianVeterinaryInstitute/NVIcheckmate
+    NorwegianVeterinaryInstitute/NVIcheckmate,
+    NorwegianVeterinaryInstitute/NVIpackager
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Language: en-GB

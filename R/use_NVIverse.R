@@ -6,7 +6,7 @@
 #' @param pkg A vector with the name of one or more NVIverse packages.
 #' @param auth_token To install NVIconfig a personal access token is needed. Generate a personal
 #'     access token (PAT) in "https://github.com/settings/tokens" and
-#'     supply to this argument. Defaults to \code{NA}.
+#'     supply to this argument. Defaults to \code{NULL}.
 #' @param dependencies The dependencies to check and eventually install. Can be
 #'     a character vector (selecting from "Depends", "Imports", "LinkingTo",
 #'     "Suggests", or "Enhances"), or a logical vector. \code{TRUE} is shorthand
@@ -31,7 +31,7 @@
 
 
 use_NVIverse <- function(pkg,
-                         auth_token = NA,
+                         auth_token = NULL,
                          dependencies = NA,
                          upgrade = FALSE,
                          build = TRUE,
@@ -57,14 +57,16 @@ use_NVIverse <- function(pkg,
     if (NVIcheckmate_installed) {
       NVIcheckmate::assert_character(auth_token,
                                      len = 1,
+                                     any.missing = FALSE,
+                                     null.ok = TRUE,
                                      comment = "You will need an personal authentication token to install NVIconfig",
                                      add = checks)
     }
     if (!NVIcheckmate_installed) {
-      checkmate::assert_character(auth_token, len = 1, add = checks)
+      checkmate::assert_character(auth_token, len = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
     }
   } else {
-    checkmate::assert_character(auth_token, len = 1, null.ok = TRUE, add = checks)
+    checkmate::assert_character(auth_token, len = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
 
   }
 
