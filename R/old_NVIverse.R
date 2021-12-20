@@ -18,7 +18,7 @@ old_NVIverse <- function(lib.loc = NULL,
 
   # Check that NVIcheckmate is installed to avoid using NVIcheckmate functions if not installed
   NVIcheckmate_installed <- FALSE
-  if (nchar(system.file(package = "NVIcheckmate")))  {NVIcheckmate_installed <- TRUE}
+  if (nchar(system.file(package = "NVIcheckmate"))) {NVIcheckmate_installed <- TRUE}
 
   # Perform checks
   # lib.loc
@@ -29,7 +29,7 @@ old_NVIverse <- function(lib.loc = NULL,
                            choices = NVIpkgs,
                            add = checks)
   # auth_token
-  if ("NVIconfig" %in% pkg)  {
+  if ("NVIconfig" %in% pkg) {
     if (NVIcheckmate_installed) {
       NVIcheckmate::assert_character(auth_token,
                                      len = 1,
@@ -56,17 +56,17 @@ old_NVIverse <- function(lib.loc = NULL,
     # i <- 1
     gh_version <- gh::gh("GET /repos/NorwegianVeterinaryInstitute/{repo}/releases/latest",
                          repo = installed[i, "Package"])
-    gh_version <- sub("[[:alpha:]]","",gh_version[["tag_name"]])
+    gh_version <- sub("[[:alpha:]]", "", gh_version[["tag_name"]])
 
-    installed[i, "gh_version"] <- paste(stringr::word(gh_version, start = 1, end = 3, sep="\\."), collapse = "\\.")
+    installed[i, "gh_version"] <- paste(stringr::word(gh_version, start = 1, end = 3, sep = "\\."), collapse = "\\.")
 
-    installed[i, "Version"] <- paste(stringr::word(installed[i, "Version"], start = 1, end = 3, sep="\\."), collapse = "\\.")
+    installed[i, "Version"] <- paste(stringr::word(installed[i, "Version"], start = 1, end = 3, sep = "\\."), collapse = "\\.")
 
     installed[i, "compare"] <- utils::compareVersion(installed[i, "Version"], installed[i, "gh_version"])
   }
-  installed <- subset(installed[, c("Package", "Version", "gh_version")], installed$compare == - 1)
+  installed <- subset(installed[, c("Package", "Version", "gh_version")], installed$compare == -1)
   # if (dim(installed)[1] == 0) {installed <- NULL}
-  return (installed)
+  return(installed)
 }
 
 
