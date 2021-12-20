@@ -50,20 +50,20 @@ gather_messages <- function(filename,
 
   # Identifies lines with error messages
   # Collects the line with error and the two next lines
-  error_lines<-grep("Error",logfile)
-  error_lines<-c(error_lines, error_lines+1, error_lines+2)
+  error_lines <- grep("Error", logfile)
+  error_lines <- c(error_lines, error_lines + 1, error_lines + 2)
 
   # Identifies lines with warning messages
   # Collects the line with warning and the next line
-  warning_lines<-grep("Warning",logfile)
-  warning_lines<-c(warning_lines,warning_lines+1)
+  warning_lines <- grep("Warning", logfile)
+  warning_lines <- c(warning_lines, warning_lines + 1)
 
   # Combines error and warning messages
-  message_lines<-unique(c(error_lines,warning_lines))
-  message_lines<-message_lines[order(message_lines)]
+  message_lines <- unique(c(error_lines, warning_lines))
+  message_lines <- message_lines[order(message_lines)]
 
   # Identifies lines with allowed warnings
-  if(!is.null(remove_allowed) && trimws(remove_allowed) != "") {
+  if (!is.null(remove_allowed) && trimws(remove_allowed) != "") {
     for (i in 1:length(remove_allowed)) {
       allowed <- grep(remove_allowed[i], logfile)
       if (i == 1) {
@@ -78,7 +78,7 @@ gather_messages <- function(filename,
   if (!exists("allowed_lines")) {allowed_lines <- 1}
 
   # Removes messages after a defined tag that can be set with print()
-  if(!is.null(remove_after) && trimws(remove_after) != "") {
+  if (!is.null(remove_after) && trimws(remove_after) != "") {
     finished <- grep(remove_after, logfile)
   }
   if (exists("finished")) {
@@ -92,7 +92,7 @@ gather_messages <- function(filename,
 
   # Make a data frame with line numbers and error and warning messages
   messages <- as.data.frame(logfile[message_lines], StringAsFactors = FALSE)
-  messages <- paste(message_lines, messages[,1])
+  messages <- paste(message_lines, messages[, 1])
 
   return(messages)
 
