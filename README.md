@@ -55,9 +55,10 @@ The `NVIbatch` package needs to be attached.
 `NVIbatch`provides tools to facilitate the writing of batch R-scripts
 that should be run automatically at specific times.
 
-The list of available functions and datasets can be accessed by typing
+The full list of all available functions and datasets can be accessed by
+typing
 
-    help(package="NVIdb")
+    help(package="NVIbatch")
 
 Please check the NEWS for information on new features, bug fixes and
 other changes.
