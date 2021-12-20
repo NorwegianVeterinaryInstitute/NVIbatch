@@ -28,8 +28,6 @@
 #' @examples
 #' use_NVIverse("NVIcheckmate")
 #' use_NVIverse(pkg = c("NVIcheckmate", "NVIdb"))
-
-
 use_NVIverse <- function(pkg,
                          auth_token = NULL,
                          dependencies = NA,
@@ -37,11 +35,11 @@ use_NVIverse <- function(pkg,
                          build = TRUE,
                          build_manual = TRUE,
                          build_vignettes = TRUE,
-                         ... ) {
+                         ...) {
   # ARGUMENT CHECKING ----
   # Check that NVIcheckmate is installed to avoid using NVIcheckmate functions if not installed
   NVIcheckmate_installed <- FALSE
-  if (nchar(system.file(package = "NVIcheckmate")))  {NVIcheckmate_installed <- TRUE}
+  if (nchar(system.file(package = "NVIcheckmate"))) {NVIcheckmate_installed <- TRUE}
 
   # Object to store check-results
   checks <- checkmate::makeAssertCollection()
@@ -53,7 +51,7 @@ use_NVIverse <- function(pkg,
                                        "OKplan", "OKcheck"),
                            add = checks)
   # auth_token
-  if ("NVIconfig" %in% pkg & !nchar(system.file(package = "NVIconfig")))  {
+  if ("NVIconfig" %in% pkg & !nchar(system.file(package = "NVIconfig"))) {
     if (NVIcheckmate_installed) {
       NVIcheckmate::assert_character(auth_token,
                                      len = 1,
@@ -115,7 +113,7 @@ use_NVIverse <- function(pkg,
   # ATTACH PACKAGE ----
   # run for each package separately, library doesn't accept vectorized input
   for (i in pkg) {
-    if (!nchar(system.file(package = i)))  {
+    if (!nchar(system.file(package = i))) {
       # Install from NorwegianVeterinaryInstitute at GitHub if needed
       remotes::install_github(paste0("NorwegianVeterinaryInstitute/", i),
                               auth_token = auth_token,
@@ -124,9 +122,8 @@ use_NVIverse <- function(pkg,
                               build_manual = build_manual,
                               build_vignettes = build_vignettes,
                               dependencies = dependencies,
-                              ... )
+                              ...)
     }
-    library (package = i, character.only = TRUE)
+    library(package = i, character.only = TRUE)
   }
 }
-
