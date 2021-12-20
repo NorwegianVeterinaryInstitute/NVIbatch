@@ -16,9 +16,9 @@ test_that("Attach NVIverse packages", {
 test_that("Install NVIverse packages", {
 
   pkg <- "OKplan"
-  if(pkg %in% (.packages())){
+  if (pkg %in% (.packages())) {
     pkgname <- paste0("package:", pkg)
-    detach(pkgname, unload=TRUE, character.only = TRUE)
+    detach(pkgname, unload = TRUE, character.only = TRUE)
   }
   remove.packages("OKplan")
   use_NVIverse(pkg = "OKplan")
@@ -30,6 +30,6 @@ test_that("Install NVIverse packages", {
 test_that("Error messages for use_NVIverse", {
 
   expect_error(use_NVIverse(pkg = "plyr"),
-             regexp = "'NVIconfig','NVIbatch','NVIcheckmate','NVIdb'" )
+             regexp = "'NVIconfig','NVIbatch','NVIcheckmate','NVIdb'")
 
 })
