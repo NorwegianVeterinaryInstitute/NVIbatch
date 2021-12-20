@@ -13,7 +13,6 @@
 #' @examples
 #' use_pkg("checkmate")
 #' use_pkg(pkg = c("checkmate", "devtools"))
-
 use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
 
   # ARGUMENT CHECKING ----
@@ -30,9 +29,9 @@ use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
 
   # RUNNING SCRIPT ----
   for (i in pkg) {
-    if (!nchar(system.file(package = i)))  {
+    if (!nchar(system.file(package = i))) {
       utils::install.packages(pkgs = i, repos = repos, ...)
     }
-    library (package = i, character.only = TRUE)
+    library(package = i, character.only = TRUE)
   }
 }
