@@ -47,8 +47,7 @@ use_NVIverse <- function(pkg,
   # Perform checks
   # pkg
   checkmate::assert_subset(pkg,
-                           choices = c("NVIconfig", "NVIbatch", "NVIcheckmate", "NVIdb", "NVIpretty",
-                                       "OKplan", "OKcheck"),
+                           choices = NVIrpackages::NVIpackages$Package,
                            add = checks)
   # auth_token
   if ("NVIconfig" %in% pkg & !nchar(system.file(package = "NVIconfig"))) {
