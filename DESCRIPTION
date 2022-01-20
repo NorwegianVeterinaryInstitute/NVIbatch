@@ -16,7 +16,6 @@ URL: https://github.com/NorwegianVeterinaryInstitute/NVIbatch
 BugReports: https://github.com/NorwegianVeterinaryInstitute/NVIbatch/issues
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Imports:
     checkmate,
     knitr,
