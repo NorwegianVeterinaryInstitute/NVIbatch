@@ -1,3 +1,11 @@
+NVIbatch 0.2.4 - (2022-01-20)
+--------------------------
+
+  Bug fixes:
+
+  - Fixed problems with package dependencies during installation.
+
+
 NVIbatch 0.2.3 - (2021-11-30)
 --------------------------
 

@@ -1,5 +1,4 @@
-NVIbatch: Tools to facilitate the running of R-scripts in batch mode at NVI
-===========================================================================
+# NVIbatch: Tools to facilitate the running of R-scripts in batch mode at NVI
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -9,8 +8,7 @@ NVIbatch: Tools to facilitate the running of R-scripts in batch mode at NVI
 -   [Copyright and license](#copyright-and-license)
 -   [Contributing](#contributing)
 
-Overview
---------
+## Overview
 
 `NVIbatch` provides tools to facilitate the writing of batch R-scripts
 that should be run automatically at specific times.
@@ -19,17 +17,16 @@ that should be run automatically at specific times.
 to facilitate data management and data reporting at the Norwegian
 Veterinary Institute (NVI). The NVIverse consists of the following
 packages: NVIconfig, NVIdb, NVIpretty, NVIbatch, OKplan, OKcheck,
-NVIcheckmate, NVIpackager. See the vignette “Contribute to NVIbatch” for
-more information.
+NVIcheckmate, NVIpackager, NVIrpackages. See the vignette “Contribute to
+NVIbatch” for more information.
 
-Installation
-------------
+## Installation
 
 `NVIbatch` is available at
 [GitHub](https://github.com/NorwegianVeterinaryInstitute). To install
 `NVIbatch` you will need:
 
--   R version &gt; 4.0.0
+-   R version > 4.0.0
 -   R package `remotes`
 -   Rtools 4.0
 
@@ -40,38 +37,36 @@ First install and attach the `remotes` package.
 
 To install (or update) the `NVIbatch` package, run the following code:
 
-    remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch")
+    remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch",
         upgrade = FALSE,
         build = TRUE,
         build_manual = TRUE)
 
-Usage
------
+## Usage
 
 The `NVIbatch` package needs to be attached.
 
-    library(NVIdb)
+    library(NVIbatch)
 
 `NVIbatch`provides tools to facilitate the writing of batch R-scripts
 that should be run automatically at specific times.
 
-The list of available functions and datasets can be accessed by typing
+The full list of all available functions and datasets can be accessed by
+typing
 
-    help(package="NVIdb")
+    help(package = "NVIbatch")
 
 Please check the NEWS for information on new features, bug fixes and
 other changes.
 
-Copyright and license
----------------------
+## Copyright and license
 
-Copyright (c) 2021 Norwegian Veterinary Institute.  
+Copyright (c) 2021 - 2022 Norwegian Veterinary Institute.  
 Licensed under the BSD\_3\_clause License. See
 [License](https://github.com/NorwegianVeterinaryInstitute/NVIbatch/blob/main/LICENSE)
 for details.
 
-Contributing
-------------
+## Contributing
 
 Contributions to develop `NVIbatch` is highly appreciated. There are
 several ways you can contribute to this project: ask a question, propose
