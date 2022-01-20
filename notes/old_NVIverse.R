@@ -4,12 +4,12 @@
 #'
 #' @param lib.loc character vector describing the location of R library trees to search through-out, or NULL for all known trees (see .libPaths).
 #' @param pkg NVIverse packages that should be checked. Only packages listed and installed are checked. Defaults to all NVIverse packages.
-#' @param auth_token
+#' @param auth_token The authorization token for GitHub that gives access to NVI's GitHub repository.
 #' @export
 #'
 
 old_NVIverse <- function(lib.loc = NULL,
-                         pkg = NVIpkgs,
+                         pkg = NVIrpackages::NVIpackages$Package,
                          auth_token = NULL) {
 
   # ARGUMENT CHECKING ----
@@ -26,7 +26,7 @@ old_NVIverse <- function(lib.loc = NULL,
 
   # pkg
   checkmate::assert_subset(pkg,
-                           choices = NVIpkgs,
+                           choices = NVIrpackages::NVIpackages$Package,
                            add = checks)
   # auth_token
   if ("NVIconfig" %in% pkg) {
