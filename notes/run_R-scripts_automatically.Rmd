@@ -1,0 +1,136 @@
+--- 
+title: "Set up R-scripts to run automatically"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Set up R-scripts to run automatically}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## Overwiev
+To set up R-scripts to run automatically at scheduled times is done with three processes.
+
+1. Set up Task Scheduler on Windows  to run a bat-script automatically.
+2. Write a the bat-script that call R and run the R-scripts. We call two R-scripts, one that sources all R-scripts to do the job and one that check the log and report the results.
+3. Write the R-scripts to do the job
+
+## Set up Windows to run a bat-script automatically
+You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). Contact epi to get access to a server to host the script.
+
+## write the bat file
+Use a bat-file to call R-scripts. We call two R-scripts, the main script that sources all R-scripts to do the job,  and a R-script to check the log after the main script ws run and report the status after running the main script. 
+
+A typical bat-file can look like this:
+```
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123.R"
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123_check_log.R"
+```
+
+Be aware that if the path names to the R-scripts include spaces, the path name must be enclosed in quotes. 
+National characters should be avoided in the path name. If they cannot be avoided and the bat-file cannot start the R-scripts, try the following. 
+Identify the code oge at the Windows server running the bat-file. 
+Start the bat-file with setting the codepage to the same as the code page for the server where the R-scripts are located. 
+End the bat-file by setting the code page back to the original code page. 
+
+## The main R-script
+Give the main script a stable name that is self explanatory. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. An example is batch_outbreak_123_disease_2020.R
+
+The main script sources different R-scripts that does the tasks. The batch script will usually consist of three parts, setting up the R-environment, sourcing R-scripts, and making the end of the script. 
+
+Setting up the R-environment
+Attach packages
+```{r, include = TRUE} 
+library(NVIbatch) 
+use_pkg(pkg = c()) 
+use_NVIverse(pkg = c()) 
+```
+
+Global variables
+```{r, include = TRUE} 
+today <-
+``` 
+
+Source R-scripts 
+```{r, include = TRUE} 
+
+``` 
+marking the end of the script
+```{r, include = TRUE} 
+
+``` 
+
+## R-script to check the log
+The aim of this script is to perform a check if the main script did run, and if not, report the error and warning messages. The script generates an email that is sent to specified persons.
+
+Give the log script a stable name that is self explanatory. The name of the log script is included in the bat-file command and you prefer to not have to change the bat-file command. I prefer to give a name that is built on the main script name, for example batch_outbreak_123_disease_2020_check_log.R.
+
+The check log script will usually consist of five parts, setting up the R-environment, save the log in the archive, check the log for warnings and errors, report the result of the check per email and delete old log files in the archive.
+
+Setting up the R-environment
+Attach packages
+```{r, include = TRUE} 
+library(NVIbatch) 
+use_pkg(pkg = c("sendmailR")) 
+use_NVIverse(pkg = c("NVIdb")) 
+```
+
+Global variables
+```{r, include = TRUE} 
+# Global variables
+# Paths and filenames
+domene <- paste0(set_dir_NVI("FAG"), "xxxx")
+
+batch <- "batch_outbreak_123_disease_2020" #= navnet på scriptet som det skal lage logg for
+
+#Dagens dato i formatet yyyymmdd til bruk i filnavn
+today <- format(Sys.Date(),"%Y%m%d")
+```
+
+Save log in archive
+```{r, include = TRUE} 
+# SAVE LOG-FILE PER DAY ----
+file.copy(from = paste0(domene,"Rscripts/",batch,".Rout"), 
+          to = paste0(domene, "batchlogg/", batch, " ", today, ".Rout"))
+
+``` 
+
+Check log for errors and warnings
+```{r, include = TRUE} 
+messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"))
+``` 
+
+Send email with the results of the check
+```{r, include = TRUE} 
+#needs full path if not in working directory
+attachmentPathName <- paste0(domene, "Rscripts/", batch, ".Rout")
+#same as attachmentPath if using working directory
+attachmentName <- paste0(batch, ".Rout")
+#key part for attachments, put the body and the mime_part in a list for msg
+attachmentObject <- mime_part(x = attachmentPathName, name = attachmentName)
+
+# Tar inn feilmeldinger dersom det er noen
+if (length(messages)>0) {
+  subject <- paste("Feil i", batch)
+  body <- list(c("Feilmeldinger", messages), attachmentObject)
+} else {
+  subject <- paste("Status for", batch)
+  body <- list(attachmentObject)
+}
+
+# SEND EMAIL ----
+sendmail(from = "<epi@vetinst.no>",
+         to = c("<Petter.Hopp@vetinst.no>"),
+         subject = subject,
+         msg = body, 
+         control = list(smtpServer="webmail.vetinst.no"))
+``` 
+
+Delete archived files
+```{r, include = TRUE} 
+
+```
+
