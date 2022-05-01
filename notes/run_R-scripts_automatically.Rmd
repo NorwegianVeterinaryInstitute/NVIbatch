@@ -20,10 +20,16 @@ Automatic running of R-scripts at scheduled times is useful for making routine r
 4. [Write the R-script to check the log](#r-script-to-check-the-log)
 
 ## Set up Windows Task Scheduler
-You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). Contact epi to get access to a server to host the script.
+You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10).
+
+Chose Create task (Opprett oppgave) in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and the main R-script (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
+
+In the tab Triggers (Utløsere), chose new trigger and set up the system of when to run the program. In the tab for Actions (Handlinger), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standardsettings of the tabs Conditions (betingelser) and Settings (Innstillinger).
+
+We have a dedicated server to run the batch scripts and we haveuse a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
 ## bat-script
-Use a bat-file to call R-scripts. We call two R-scripts, the main script that sources all R-scripts to do the job,  and a R-script to check the log after the main script ws run and report the status after running the main script. 
+The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources all R-scripts to do the job,  and an R-script to check the log after the main script has run and report the status for the running of the main script. 
 
 A typical bat-file can look like this:
 ```
@@ -32,10 +38,20 @@ A typical bat-file can look like this:
 ```
 
 Be aware that if the path names to the R-scripts include spaces, the path name must be enclosed in quotes. 
-National characters should be avoided in the path name. If they cannot be avoided and the bat-file cannot start the R-scripts, try the following. 
-Identify the code oge at the Windows server running the bat-file. 
-Start the bat-file with setting the codepage to the same as the code page for the server where the R-scripts are located. 
-End the bat-file by setting the code page back to the original code page. 
+National characters should be avoided in the path name. If national characters cannot be avoided and the bat-file do not start the R-scripts, this may be due to the national characters. Try the following:
+
+- Identify the code page at the Windows server running the bat-file. 
+- Start the bat-file with setting the codepage to the same as the code page for the server where the R-scripts are located. 
+- Include the calls to the R-scripts
+- End the bat-file by setting the code page back to the original code page. 
+
+A typical bat-file can look like this:
+```
+codepage ####
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123.R"
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123_check_log.R"
+codepage original
+```
 
 ## Main R-script
 Give the main script a stable name that is self explanatory. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. An example is batch_outbreak_123_disease_2020.R
