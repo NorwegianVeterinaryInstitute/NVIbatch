@@ -33,8 +33,8 @@ The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, t
 
 A typical bat-file can look like this:
 ```
-"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123.R"
-"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123_check_log.R"
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak.R"
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_check_log.R"
 ```
 
 Be aware that if the path names to the R-scripts include spaces, the path name must be enclosed in quotes. 
@@ -45,13 +45,19 @@ National characters should be avoided in the path name. If national characters c
 - Include the calls to the R-scripts
 - End the bat-file by setting the code page back to the original code page. 
 
-A typical bat-file can look like this:
+The bat-file will then look like this:
 ```
-codepage ####
-"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123.R"
-"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak_123_check_log.R"
-codepage original
+:: Save the original code page at the server running the script
+for /f "tokens=4" %%i in ('chcp') do set codepage=%%i
+:: change the code page to the code page of the server with the scripts, for example 850
+chcp 850 
+:: Run the R-scripts
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak.R"
+"C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_check_log.R"
+:: Reset the code page at the server running the script
+chcp %codepage%
 ```
+
 
 ## Main R-script
 Give the main script a stable name that is self explanatory. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. An example is batch_outbreak_123_disease_2020.R
