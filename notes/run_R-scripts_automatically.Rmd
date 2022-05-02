@@ -15,9 +15,9 @@ knitr::opts_chunk$set(eval = FALSE)
 Automatic running of R-scripts at scheduled times is useful for making routine reports that should be run regularly, for example outbreak reports and extracting data for statistics like the "Skrantesykestatikk". This vignette describes the different steps to set up automatic batch jobs at Windows.
 
 1. [Set up Windows Task Scheduler to run a bat-script](#set-up-windows-task-scheduler)
-2. [Write the bat-script that run the R-scripts](#bat-script)
-3. [Write the main R-script](#main-r-script)
-4. [Write the R-script to check the log](#r-script-to-check-the-log)
+2. [Write the bat-script that run the R-scripts](#write-the-bat-script)
+3. [Write the main R-script](#write-the-main-r-script)
+4. [Write the R-script to check the log](#write-the-r-script-to-check-the-log)
 
 ## Set up Windows Task Scheduler
 You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10).
@@ -28,7 +28,7 @@ In the tab Triggers (Utløsere), chose new trigger and set up the system of when
 
 We have a dedicated server to run the batch scripts and we haveuse a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
-## bat-script
+## Write the bat-script
 The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources all R-scripts to do the job,  and an R-script to check the log after the main script has run and report the status for the running of the main script. 
 
 A typical bat-file can look like this:
@@ -59,7 +59,7 @@ chcp %codepage%
 ```
 
 
-## Main R-script
+## Write the Main R-script
 Give the main script a stable name that is self explanatory. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. An example is batch_outbreak_123_disease_2020.R
 
 The main script sources different R-scripts that does the tasks. The batch script will usually consist of three parts, setting up the R-environment, sourcing R-scripts, and making the end of the script. 
@@ -67,26 +67,48 @@ The main script sources different R-scripts that does the tasks. The batch scrip
 Setting up the R-environment
 Attach packages
 ```{r, include = TRUE} 
+# SETTER OPP R-MILJØ ----
+## Aktiverer R-pakker ----
 library(NVIbatch) 
 use_pkg(pkg = c()) 
 use_NVIverse(pkg = c()) 
+use_pkg(pkg = c("dplyr", "RODBC", "openxlsx", "ISOweek", "sendmailR"))
+use_NVIverse("NVIdb")
 ```
 
 Global variables
 ```{r, include = TRUE} 
-today <-
+## Paths and filenames ----
+domene<-paste0(set_dir_NVI("FAG"), 
+               "Tverrfaglig/Tverrfaglig prosjekter/EJP one health/NOVA/WP3 SyS/Task 3.3 Multivariate SyS for FBD/")
+
+## Dagens dato i formatet yyyymmdd til bruk i filnavn
+today<-format(Sys.Date(),"%Y%m%d")
+``` 
+
+Import support data
+```{r, include = TRUE} 
+## Henter stottedata ----
+# Read translation table for komnr
+kommune_fylke <- read_kommune_fylke()
 ``` 
 
 Source R-scripts 
 ```{r, include = TRUE} 
+# HENTER OG SENDER CAMPYLOBACTER-DATA ----
+# Laster data fra EOS MS azure
+source(paste0(domene,"Rscripts/","Hent Campylobacter data fra EOS MS azure.R"), encoding = "UTF-8")
 
+# Sender data til NFI
+source(paste0(domene,"Rscripts/","Send Campylobacter data to NFI.R"), encoding = "UTF-8")
 ``` 
-marking the end of the script
+
+Mark the end of the script
 ```{r, include = TRUE} 
-
+print("Ferdig Batch Campylobacter til NFI")
 ``` 
 
-## R-script to check the log
+## Write the R-script to check the log
 The aim of this script is to perform a check if the main script did run, and if not, report the error and warning messages. The script generates an email that is sent to specified persons.
 
 Give the log script a stable name that is self explanatory. The name of the log script is included in the bat-file command and you prefer to not have to change the bat-file command. I prefer to give a name that is built on the main script name, for example batch_outbreak_123_disease_2020_check_log.R.
