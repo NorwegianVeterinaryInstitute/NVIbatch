@@ -59,54 +59,68 @@ chcp %codepage%
 ```
 
 ## Write the Main R-script
-Give the main script a short, descriptive name. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. The main script for gererating outbreak report is by convention named batch_outbreak.R
+Give the main script a short, descriptive name. The name of the main script is included in the bat-file command so try to chosen a name that you will not change to avoid having to edit the bat-file. The main script for gererating an outbreak report is by convention named batch_outbreak.R
 
 The main script sources different R-scripts that perform the tasks. The batch script will usually consist of three parts:
 
 - Set up the R-environment.
 - Source the R-scripts.
-- Mark the end of the main script. 
+- Mark the end of the main script.
 
 ### Set up the R-environment
-Attach packages
-```{r, include = TRUE} 
-# SETTER OPP R-MILJØ ----
-## Aktiverer R-pakker ----
-library(NVIbatch) 
-use_pkg(pkg = c()) 
-use_NVIverse(pkg = c()) 
-use_pkg(pkg = c("dplyr", "RODBC", "openxlsx", "ISOweek", "sendmailR"))
+In this part you want to set up the R-environment for all script that are called by the main script. That includes attaching all the needed packages, setting up global variables and functions, and load support data.
+
+#### Attach packages
+You may use use_pkg for packages at Cran and use_NVIverse for packages within NVIverse. These functions accept a vector with packages and will attach the packages if installed and install the package first if not installed. To install packages, the user running the batch needs writing rights.
+```{r, include = TRUE}
+# SET UP R-ENVIRONMENT ----
+## Activate R-packages ----
+library(NVIbatch)
+use_pkg(pkg = c("dplyr", "RODBC"))
 use_NVIverse("NVIdb")
 ```
 
-Global variables
-```{r, include = TRUE} 
+#### Global variables
+It is useful to have one place where all global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the Rscript cannot be set automatically by package 'here' at the server. 
+therefore the most robust is to set the path name manually. 
+```{r, include = TRUE}
 ## Paths and filenames ----
-domene<-paste0(set_dir_NVI("FAG"), 
-               "Tverrfaglig/Tverrfaglig prosjekter/EJP one health/NOVA/WP3 SyS/Task 3.3 Multivariate SyS for FBD/")
+# The path to the R-scripts.
+rscripts <- paste0(set_dir_NVI("Hendelser"),"xxxx/xxxx/")
+rscripts <- dirname(rstudioapi::getSourceEditorContext()$path)
 
-## Dagens dato i formatet yyyymmdd til bruk i filnavn
-today<-format(Sys.Date(),"%Y%m%d")
-``` 
+## Today's date in the format yyyymmdd for use in filenames.
+today <- format(Sys.Date(), "%Y%m%d")
+```
 
-Import support data
+#### Import support data
+Usually you may be dependent on loading some registers that are used later. Until we have access to databases with this registers, these can be imported in this part of the script. 
 ```{r, include = TRUE} 
-## Henter stottedata ----
+## Import support data ----
 # Read translation table for komnr
 kommune_fylke <- read_kommune_fylke()
 ``` 
 
 ### Source the R-scripts 
+These scripts are performing thee tasks that shall end in the report(s). Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity is the names of the scripts in the outbreak report standardized. 
 ```{r, include = TRUE} 
-# HENTER OG SENDER CAMPYLOBACTER-DATA ----
-# Laster data fra EOS MS azure
-source(paste0(domene,"Rscripts/","Hent Campylobacter data fra EOS MS azure.R"), encoding = "UTF-8")
+# OUTBREAK REPORT ----
+# Imports data from PJS
+source(paste0(rscripts, "Hent_PJS_data.R"), encoding = "UTF-8")
 
-# Sender data til NFI
-source(paste0(domene,"Rscripts/","Send Campylobacter data to NFI.R"), encoding = "UTF-8")
+# Prepares PJS data for further analysis
+source(paste0(rscripts, "Bearbeid_PJS_data.R"), encoding = "UTF-8")
+
+# Make table of received and examined samples
+source(paste0(rscripts, "Tabulate_samples.R"), encoding = "UTF-8")
+
+# Write the report
+source(paste0(rscripts, "Report_outbreak.R"), encoding = "UTF-8")
+
 ``` 
 
 ### Mark the end of the main script
+
 ```{r, include = TRUE} 
 print("Ferdig Batch Campylobacter til NFI")
 ``` 
