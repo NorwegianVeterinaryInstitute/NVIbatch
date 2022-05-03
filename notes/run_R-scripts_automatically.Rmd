@@ -29,7 +29,7 @@ In the tab Triggers (Utløsere), chose new trigger and set up the system of when
 We have a dedicated server to run the batch scripts and we haveuse a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
 ## Write the bat-script
-The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources all R-scripts to do the job,  and an R-script to check the log after the main script has run and report the status for the running of the main script. 
+The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources several R-scripts to Perform various tasks,  and an R-script to check the log of the main script and report the status and if there were any error or warning messages.
 
 A typical bat-file can look like this:
 ```
@@ -41,15 +41,15 @@ Be aware that if the path names to the R-scripts include spaces, the path name m
 National characters should be avoided in the path name. If national characters cannot be avoided and the bat-file do not start the R-scripts, this may be due to the national characters. Try the following:
 
 - Identify the code page at the Windows server running the bat-file. 
-- Start the bat-file with setting the codepage to the same as the code page for the server where the R-scripts are located. 
-- Include the calls to the R-scripts
-- End the bat-file by setting the code page back to the original code page. 
+- Set the code page to the same code page as for the server where the R-scripts are located. 
+- Call the R-scripts
+- Reset the code page back to the original code page. 
 
-The bat-file will then look like this:
+This can be done automatically in the bat-file. Do not use this code unless necessary, if something goes wrong, you may have changed the code lage unintentionally. 
 ```
 :: Save the original code page at the server running the script
 for /f "tokens=4" %%i in ('chcp') do set codepage=%%i
-:: change the code page to the code page of the server with the scripts, for example 850
+:: change the code page to the code page of the server with the scripts, for example 850. 
 chcp 850 
 :: Run the R-scripts
 "C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak.R"
@@ -58,13 +58,16 @@ chcp 850
 chcp %codepage%
 ```
 
-
 ## Write the Main R-script
-Give the main script a stable name that is self explanatory. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. An example is batch_outbreak_123_disease_2020.R
+Give the main script a short, descriptive name. The name of the main script is included in the bat-file command and you prefer to not have to change the bat-file command. The main script for gererating outbreak report is by convention named batch_outbreak.R
 
-The main script sources different R-scripts that does the tasks. The batch script will usually consist of three parts, setting up the R-environment, sourcing R-scripts, and making the end of the script. 
+The main script sources different R-scripts that perform the tasks. The batch script will usually consist of three parts:
 
-Setting up the R-environment
+- Set up the R-environment.
+- Source the R-scripts.
+- Mark the end of the main script. 
+
+### Set up the R-environment
 Attach packages
 ```{r, include = TRUE} 
 # SETTER OPP R-MILJØ ----
@@ -93,7 +96,7 @@ Import support data
 kommune_fylke <- read_kommune_fylke()
 ``` 
 
-Source R-scripts 
+### Source the R-scripts 
 ```{r, include = TRUE} 
 # HENTER OG SENDER CAMPYLOBACTER-DATA ----
 # Laster data fra EOS MS azure
@@ -103,7 +106,7 @@ source(paste0(domene,"Rscripts/","Hent Campylobacter data fra EOS MS azure.R"), 
 source(paste0(domene,"Rscripts/","Send Campylobacter data to NFI.R"), encoding = "UTF-8")
 ``` 
 
-Mark the end of the script
+### Mark the end of the main script
 ```{r, include = TRUE} 
 print("Ferdig Batch Campylobacter til NFI")
 ``` 
