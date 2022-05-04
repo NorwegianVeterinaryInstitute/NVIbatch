@@ -59,42 +59,42 @@ chcp %codepage%
 ```
 
 ## Write the Main R-script
-Give the main script a short, descriptive name. The name of the main script is included in the bat-file command so try to chosen a name that you will not change to avoid having to edit the bat-file. The main script for gererating an outbreak report is by convention named batch_outbreak.R
+Give the main script a short, descriptive name. The name of the main script is included in the bat-file command. To avoid having to edit the bat-file, you should chose a name that you will not change. The main script for generating an outbreak report is by convention named batch_outbreak.R.
 
-The main script sources different R-scripts that perform the tasks. The batch script will usually consist of three parts:
+The main script sources one or more R-scripts that together perform the tasks to generate a product, for example a report. The batch script will usually consist of three parts:
 
 - Set up the R-environment.
 - Source the R-scripts.
 - Mark the end of the main script.
 
 ### Set up the R-environment
-In this part you want to set up the R-environment for all script that are called by the main script. That includes attaching all the needed packages, setting up global variables and functions, and load support data.
+In this part you want to set up the R-environment for all script that are called (sourced) by the main script. That includes attaching all packages needed, setting up global variables and functions, and loading support data.
 
 #### Attach packages
-You may use use_pkg for packages at Cran and use_NVIverse for packages within NVIverse. These functions accept a vector with packages and will attach the packages if installed and install the package first if not installed. To install packages, the user running the batch needs writing rights.
+In base one use 'library' or 'require' to attach packages. Of these 'library' is preferred as 'require' will not produce an error message if a package isn't attached. 
+
+An alternative is to use 'use_pkg' and 'use_NVIverse' from 'NVIbatch'. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use 'use_pkg' for packages at Cran and 'use_NVIverse' for packages within the NVIverse.  If the packages need to be installed, the user running the batch needs writing rights to the appropriate directories.
 ```{r, include = TRUE}
 # SET UP R-ENVIRONMENT ----
-## Activate R-packages ----
+## Attach R-packages ----
 library(NVIbatch)
 use_pkg(pkg = c("dplyr", "RODBC"))
 use_NVIverse("NVIdb")
 ```
 
-#### Global variables
-It is useful to have one place where all global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the Rscript cannot be set automatically by package 'here' at the server. 
-therefore the most robust is to set the path name manually. 
+#### Set global variables
+We advise to have one section in which the global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script cannot be set automatically by package 'here' at the server. 
 ```{r, include = TRUE}
 ## Paths and filenames ----
 # The path to the R-scripts.
-rscripts <- paste0(set_dir_NVI("Hendelser"),"xxxx/xxxx/")
-rscripts <- dirname(rstudioapi::getSourceEditorContext()$path)
+rscripts <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/rscripts/")
 
 ## Today's date in the format yyyymmdd for use in filenames.
 today <- format(Sys.Date(), "%Y%m%d")
 ```
 
 #### Import support data
-Usually you may be dependent on loading some registers that are used later. Until we have access to databases with this registers, these can be imported in this part of the script. 
+Usually you will combine data with other register, for example to trasnslate PJS-codes to descriptive text, or merge with fylke and kommune registers. Currently such registers must be loaded/imported before used. This may change when such information in stead is stored in databases.  
 ```{r, include = TRUE} 
 ## Import support data ----
 # Read translation table for komnr
@@ -102,7 +102,7 @@ kommune_fylke <- read_kommune_fylke()
 ``` 
 
 ### Source the R-scripts 
-These scripts are performing thee tasks that shall end in the report(s). Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity is the names of the scripts in the outbreak report standardized. 
+These scripts are performing the tasks that shall generate the products and reports. Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity, the names of the scripts in the outbreak report are standardized. 
 ```{r, include = TRUE} 
 # OUTBREAK REPORT ----
 # Imports data from PJS
@@ -114,15 +114,16 @@ source(paste0(rscripts, "Bearbeid_PJS_data.R"), encoding = "UTF-8")
 # Make table of received and examined samples
 source(paste0(rscripts, "Tabulate_samples.R"), encoding = "UTF-8")
 
+
 # Write the report
 source(paste0(rscripts, "Report_outbreak.R"), encoding = "UTF-8")
 
 ``` 
 
 ### Mark the end of the main script
-
+At the end of the script it is useful to print a message that marks the end of the script. That is because you in the next step error messages and warnings will be checked and messages after the end-mark don't need to be checked. When finish ingen a batch Job there will often be error messages du to lack of writing access. To avoid these to turn up in the check, see next section, you mark the end of the script. There is no need for this step unless you run the check log step. 
 ```{r, include = TRUE} 
-print("Ferdig Batch Campylobacter til NFI")
+print("Ferdig_batch_outbreak")
 ``` 
 
 ## Write the R-script to check the log
