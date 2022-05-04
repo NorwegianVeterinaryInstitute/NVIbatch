@@ -1,3 +1,11 @@
+NVIbatch 0.2.4.9000 - (2022-0#-##)
+--------------------------
+
+  Other changes:
+
+  - Included vignette: Run R-scripts automatically.
+
+
 NVIbatch 0.2.4 - (2022-01-20)
 --------------------------
 
@@ -49,7 +57,7 @@ NVIbatch 0.2.0 - (2021-09-07)
   - Improved argument checking.
 
 
-.9000NVIbatch 0.1.1 - (2021-05-20)
+NVIbatch 0.1.1 - (2021-05-20)
 --------------------------
 
   Bug fixes:
