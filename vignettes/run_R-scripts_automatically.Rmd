@@ -1,9 +1,9 @@
 --- 
-title: "Set up R-scripts to run automatically"
+title: "Run R-scripts automatically"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Set up R-scripts to run automatically}
+  %\VignetteIndexEntry{Run R-scripts automatically}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -89,7 +89,7 @@ We advise to have one section in which the global variables are set. In this exa
 # The path to the R-scripts.
 rscripts <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/rscripts/")
 
-## Today's date in the format yyyymmdd for use in filenames.
+# Today's date in the format yyyymmdd for use in filenames.
 today <- format(Sys.Date(), "%Y%m%d")
 ```
 
@@ -121,7 +121,7 @@ source(paste0(rscripts, "Report_outbreak.R"), encoding = "UTF-8")
 ``` 
 
 ### Mark the end of the main script
-At the end of the script it is useful to print a message that marks the end of the script. That is because you in the next step error messages and warnings will be checked and messages after the end-mark don't need to be checked. When finish ingen a batch Job there will often be error messages du to lack of writing access. To avoid these to turn up in the check, see next section, you mark the end of the script. There is no need for this step unless you run the check log step. 
+At the end of the script it is useful to print a message that marks the end of the script. That is because you in the next step error messages and warnings will be checked and messages after the end-mark don't need to be checked. When finishing a batch job there will often be error messages due to lack of writing access. To avoid these to turn up in the check, see next section, you mark the end of the script. There is no need for this step unless you run the check log step. 
 ```{r, include = TRUE} 
 print("Ferdig_batch_outbreak")
 ``` 
