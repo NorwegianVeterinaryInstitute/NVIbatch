@@ -30,6 +30,6 @@ test_that("Install NVIverse packages", {
 test_that("Error messages for use_NVIverse", {
 
   expect_error(use_NVIverse(pkg = "plyr"),
-             regexp = "'NVIconfig','NVIbatch','NVIcheckmate','NVIdb'")
+             regexp = "'NVIconfig','NVIdb','NVIpretty','NVIbatch'")
 
 })
