@@ -127,46 +127,61 @@ print("Ferdig_batch_outbreak")
 ``` 
 
 ## Write the R-script to check the log
-The aim of this script is to perform a check if the main script did run, and if not, report the error and warning messages. The script generates an email that is sent to specified persons.
+When running R in batch mode, an Rout-file is automatically created with the output of the log. The aim of this script is to perform a check of the log output after running the main script, and to report any error and warning messages. The script generates an email that is sent to specified persons.
 
-Give the log script a stable name that is self explanatory. The name of the log script is included in the bat-file command and you prefer to not have to change the bat-file command. I prefer to give a name that is built on the main script name, for example batch_outbreak_123_disease_2020_check_log.R.
+By convenience, the script is named batch_check_log.R (or previously batch_save_log.R) .
 
-The check log script will usually consist of five parts, setting up the R-environment, save the log in the archive, check the log for warnings and errors, report the result of the check per email and delete old log files in the archive.
+The check log script will usually consist of four parts:
 
-Setting up the R-environment
-Attach packages
+- Set up the R-environment.
+- Save the log in the archive.
+- Check the log for warnings and errors.
+- Report the result of the check per email.
+
+There is need for a rutine that delete old log files from the log archive as there aren't any use for more than the most recent log files. This rutine hasn't been developed yet and old log files must be deleted manually. 
+
+### Set up the R-environment
+To set up the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. 
+
+#### Attach packages
+The packages given is the one that you will need for this script. 
 ```{r, include = TRUE} 
 library(NVIbatch) 
 use_pkg(pkg = c("sendmailR")) 
 use_NVIverse(pkg = c("NVIdb")) 
 ```
 
-Global variables
+#### Global variables
 ```{r, include = TRUE} 
-# Global variables
+## Global variables
 # Paths and filenames
-domene <- paste0(set_dir_NVI("FAG"), "xxxx")
+# The path to the outbreak directory.
+domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/")
 
-batch <- "batch_outbreak_123_disease_2020" #= navnet på scriptet som det skal lage logg for
+# The name of the main script without extension. 
+# This will also be the name of the Rout-file. 
+batch <- "batch_outbreak" 
 
-#Dagens dato i formatet yyyymmdd til bruk i filnavn
-today <- format(Sys.Date(),"%Y%m%d")
+# Today's date in the format yyyymmdd for use in filenames.
+today <- format(Sys.Date(), "%Y%m%d")
 ```
 
-Save log in archive
+### Save the log in the archive
+The Rout-file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlogg". 
 ```{r, include = TRUE} 
-# SAVE LOG-FILE PER DAY ----
-file.copy(from = paste0(domene,"Rscripts/",batch,".Rout"), 
+# Save the Rout-file ----
+file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"), 
           to = paste0(domene, "batchlogg/", batch, " ", today, ".Rout"))
 
 ``` 
 
-Check log for errors and warnings
+### Check log for errors and warnings
+The function gather_messages is used to father errors and warnings from the log-file. 
 ```{r, include = TRUE} 
 messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"))
 ``` 
 
-Send email with the results of the check
+### Send email with the results of the check
 ```{r, include = TRUE} 
 #needs full path if not in working directory
 attachmentPathName <- paste0(domene, "Rscripts/", batch, ".Rout")
@@ -185,15 +200,15 @@ if (length(messages)>0) {
 }
 
 # SEND EMAIL ----
-sendmail(from = "<epi@vetinst.no>",
-         to = c("<Petter.Hopp@vetinst.no>"),
+sendmail(from = "<common_email@domain.no>",
+         to = c("<Responsible.Person@domain.no>"),
          subject = subject,
          msg = body, 
          control = list(smtpServer="webmail.vetinst.no"))
 ``` 
 
-Delete archived files
+### Delete archived log-files
 ```{r, include = TRUE} 
-
+# Not developed yet
 ```
 
