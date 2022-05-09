@@ -121,9 +121,9 @@ source(paste0(rscripts, "Report_outbreak.R"), encoding = "UTF-8")
 ``` 
 
 ### Mark the end of the main script
-At the end of the script it is useful to print a message that marks the end of the script. That is because you in the next step error messages and warnings will be checked and messages after the end-mark don't need to be checked. When finishing a batch job there will often be error messages due to lack of writing access. To avoid these to turn up in the check, see next section, you mark the end of the script. There is no need for this step unless you run the check log step. 
+Depending of the set up of the batch job, the output log can end with error messages due to lack of writing access. These errors has no importance for the output from the R-scripts and therefore there is no need to include them in a check of the log (see below). This can be avoided by printing a message at the end of the main script to mark the end. In the check log, one check for error and warning messages until the end-mark, and skip messages afterwards. There is no need for this step unless you run the check log step. 
 ```{r, include = TRUE} 
-print("Ferdig_batch_outbreak")
+print("Ferdig batch_outbreak")
 ``` 
 
 ## Write the R-script to check the log
@@ -138,23 +138,19 @@ The check log script will usually consist of four parts:
 - Check the log for warnings and errors.
 - Report the result of the check per email.
 
-There is need for a rutine that delete old log files from the log archive as there aren't any use for more than the most recent log files. This rutine hasn't been developed yet and old log files must be deleted manually. 
+There is need for a routine that delete old log files from the log archive as there isn't any need for keeping track of more than the most recent log files. Such a routine hasn't been developed yet. Therefore, old log files must be deleted manually. 
 
 ### Set up the R-environment
-To set up the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. 
+The set up of the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. The packages given in this example is the ones that you will need for this script. 
 
-#### Attach packages
-The packages given is the one that you will need for this script. 
 ```{r, include = TRUE} 
+## Attach packages
 library(NVIbatch) 
 use_pkg(pkg = c("sendmailR")) 
 use_NVIverse(pkg = c("NVIdb")) 
-```
 
-#### Global variables
-```{r, include = TRUE} 
 ## Global variables
-# Paths and filenames
+# Paths and file names
 # The path to the outbreak directory.
 domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/")
 
@@ -172,13 +168,14 @@ The Rout-file is saved with a new name that includes today's date before the fil
 # Save the Rout-file ----
 file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"), 
           to = paste0(domene, "batchlogg/", batch, " ", today, ".Rout"))
-
 ``` 
 
 ### Check log for errors and warnings
-The function gather_messages is used to father errors and warnings from the log-file. 
+The function gather_messages is used to gather errors and warnings from the log-file. The parameter remove_allowed accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with 'grep' and 'ignore.case = TRUE'). Default is c("was built under R version"), which removes warning messages due to using packages being built on later R-versions than the current running the batch. 
 ```{r, include = TRUE} 
-messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"))
+messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
+                            remove_allowed = c("was built under R version"),
+                            remove_after = "Ferdig Batch") 
 ``` 
 
 ### Send email with the results of the check
@@ -200,15 +197,14 @@ if (length(messages)>0) {
 }
 
 # SEND EMAIL ----
-sendmail(from = "<common_email@domain.no>",
+sendmail(from = "<section@domain.no>",
          to = c("<Responsible.Person@domain.no>"),
          subject = subject,
          msg = body, 
-         control = list(smtpServer="webmail.vetinst.no"))
+         control = list(smtpServer="domain.no"))
 ``` 
 
 ### Delete archived log-files
 ```{r, include = TRUE} 
 # Not developed yet
 ```
-
