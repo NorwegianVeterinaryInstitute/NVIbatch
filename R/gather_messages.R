@@ -65,7 +65,7 @@ gather_messages <- function(filename,
   # Identifies lines with allowed warnings
   if (!is.null(remove_allowed) && trimws(remove_allowed) != "") {
     for (i in 1:length(remove_allowed)) {
-      allowed <- grep(remove_allowed[i], logfile)
+      allowed <- grep(pattern = remove_allowed[i], x = logfile, ignore.case = TRUE)
       if (i == 1) {
         allowed_lines <- allowed
       } else {
@@ -79,7 +79,7 @@ gather_messages <- function(filename,
 
   # Removes messages after a defined tag that can be set with print()
   if (!is.null(remove_after) && trimws(remove_after) != "") {
-    finished <- grep(remove_after, logfile)
+    finished <- grep(pattern = remove_after, x = logfile, ignore.case = TRUE)
   }
   if (exists("finished")) {
     if (length(finished) > 0) {
