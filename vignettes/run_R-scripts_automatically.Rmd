@@ -12,7 +12,7 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ## Overview
-Automatic running of R-scripts at scheduled times is useful for making routine reports that should be run regularly, for example outbreak reports and extracting data for statistics like the "Skrantesykestatikk". This vignette describes the different steps to set up automatic batch jobs at Windows.
+Automatic running of R-scripts at scheduled times is useful for making routine reports that should be run regularly, for example outbreak reports and extracting data for statistics like the "Skrantesykestatikk". This vignette describes the different steps to set up an automatic batch Job in Windows.
 
 1. [Set up Windows Task Scheduler to run a bat-script](#set-up-windows-task-scheduler)
 2. [Write the bat-script that run the R-scripts](#write-the-bat-script)
@@ -20,16 +20,16 @@ Automatic running of R-scripts at scheduled times is useful for making routine r
 4. [Write the R-script to check the log](#write-the-r-script-to-check-the-log)
 
 ## Set up Windows Task Scheduler
-You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10).
+You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). The most important points is mentioned below. 
 
-Chose Create task (Opprett oppgave) in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and the main R-script (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
+Chose Create task (Opprett oppgave) in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
 
-In the tab Triggers (Utløsere), chose new trigger and set up the system of when to run the program. In the tab for Actions (Handlinger), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standardsettings of the tabs Conditions (betingelser) and Settings (Innstillinger).
+In the tab Triggers (Utløsere), chose new trigger and set up the system for when to run the program. In the tab for Actions (Handlinger), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standardsettings of the tabs Conditions (betingelser) and Settings (Innstillinger).
 
-We have a dedicated server to run the batch scripts and we haveuse a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
+We have a dedicated server to run the batch scripts and we use a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
 ## Write the bat-script
-The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources several R-scripts to Perform various tasks,  and an R-script to check the log of the main script and report the status and if there were any error or warning messages.
+The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources several R-scripts to perform various tasks, and an R-script to check the log of the main script and report the status and if there were any error or warning messages.
 
 A typical bat-file can look like this:
 ```
@@ -45,7 +45,7 @@ National characters should be avoided in the path name. If national characters c
 - Call the R-scripts
 - Reset the code page back to the original code page. 
 
-This can be done automatically in the bat-file. Do not use this code unless necessary, if something goes wrong, you may have changed the code lage unintentionally. 
+This can be done automatically in the bat-file. Do not use this code unless necessary, if something goes wrong, you may have changed the code page at the batch server unintentionally. 
 ```
 :: Save the original code page at the server running the script
 for /f "tokens=4" %%i in ('chcp') do set codepage=%%i
@@ -58,22 +58,23 @@ chcp 850
 chcp %codepage%
 ```
 
-## Write the Main R-script
-Give the main script a short, descriptive name. The name of the main script is included in the bat-file command. To avoid having to edit the bat-file, you should chose a name that you will not change. The main script for generating an outbreak report is by convention named batch_outbreak.R.
+## Write the main R-script
+Give the main script a short, descriptive name. The name of the main script is included in the bat-file command. To avoid having to edit the bat-file, you should chose a name that you expect will not change. The main script for generating an outbreak report is by convention named batch_outbreak.R.
 
-The main script sources one or more R-scripts that together perform the tasks to generate a product, for example a report. The batch script will usually consist of three parts:
+The main script sources one or more R-scripts that together perform the tasks to generate a product, for example a report. The batch script will usually consist of four parts:
 
 - Set up the R-environment.
+- Import support registers
 - Source the R-scripts.
 - Mark the end of the main script.
 
 ### Set up the R-environment
-In this part you want to set up the R-environment for all script that are called (sourced) by the main script. That includes attaching all packages needed, setting up global variables and functions, and loading support data.
+In this part you want to set up the R-environment for all script that are called (sourced) by the main script. That includes attaching all packages needed and setting up global variables and functions.
 
 #### Attach packages
 In base one use 'library' or 'require' to attach packages. Of these 'library' is preferred as 'require' will not produce an error message if a package isn't attached. 
 
-An alternative is to use 'use_pkg' and 'use_NVIverse' from 'NVIbatch'. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use 'use_pkg' for packages at Cran and 'use_NVIverse' for packages within the NVIverse.  If the packages need to be installed, the user running the batch needs writing rights to the appropriate directories.
+An alternative is to use 'use_pkg' and 'use_NVIverse' from 'NVIbatch'. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use 'use_pkg' for packages at Cran and 'use_NVIverse' for packages within the NVIverse.  If the packages need to be installed, the user running the batch needs writing access to the directories for R-packages.
 ```{r, include = TRUE}
 # SET UP R-ENVIRONMENT ----
 ## Attach R-packages ----
@@ -83,7 +84,7 @@ use_NVIverse("NVIdb")
 ```
 
 #### Set global variables
-We advise to have one section in which the global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script cannot be set automatically by package 'here' at the server. 
+We advise to have one section in which the global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script at the batch server cannot be set automatically by package 'here'. 
 ```{r, include = TRUE}
 ## Paths and filenames ----
 # The path to the R-scripts.
@@ -93,7 +94,7 @@ rscripts <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/rscripts/
 today <- format(Sys.Date(), "%Y%m%d")
 ```
 
-#### Import support data
+### Import support data
 Usually you will combine data with other register, for example to trasnslate PJS-codes to descriptive text, or merge with fylke and kommune registers. Currently such registers must be loaded/imported before used. This may change when such information in stead is stored in databases.  
 ```{r, include = TRUE} 
 ## Import support data ----
