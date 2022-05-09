@@ -163,11 +163,11 @@ today <- format(Sys.Date(), "%Y%m%d")
 ```
 
 ### Save the log in the archive
-The Rout-file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlogg". 
+The Rout-file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlog". 
 ```{r, include = TRUE} 
 # Save the Rout-file ----
 file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"), 
-          to = paste0(domene, "batchlogg/", batch, " ", today, ".Rout"))
+          to = paste0(domene, "batchlog/", batch, " ", today, ".Rout"))
 ``` 
 
 ### Check log for errors and warnings
@@ -179,6 +179,14 @@ messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout
 ``` 
 
 ### Send email with the results of the check
+An email that report the status of the check is sendt to specified persons. The email includes:
+
+- The Rout-file as an attachment
+- The warning and error messages (if any) as a text in the body 
+
+The subject of the email starts with "Status" if no warning or error messages are found. If any wartnig or error messages is identified, the subject starts with "Feil i".
+
+The email can be sent to one or more email addresses. 
 ```{r, include = TRUE} 
 #needs full path if not in working directory
 attachmentPathName <- paste0(domene, "Rscripts/", batch, ".Rout")
@@ -204,7 +212,3 @@ sendmail(from = "<section@domain.no>",
          control = list(smtpServer="domain.no"))
 ``` 
 
-### Delete archived log-files
-```{r, include = TRUE} 
-# Not developed yet
-```
