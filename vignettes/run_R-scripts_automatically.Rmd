@@ -88,7 +88,7 @@ The global variables are put in section in the main script. In this example ther
 ```{r, include = TRUE}
 ## Paths and filenames ----
 # The path to the R-scripts.
-rscripts <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/rscripts/")
+script_path <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../rscripts/")
 
 # Today's date in the format yyyymmdd for use in filenames.
 today <- format(Sys.Date(), "%Y%m%d")
@@ -144,6 +144,7 @@ There is need for a routine that delete old log files from the log archive as th
 The set up of the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. The packages given in this example is the ones that you will need for this script. 
 
 ```{r, include = TRUE} 
+# SET UP R-ENVIRONMENT ----
 ## Attach packages
 library(NVIbatch) 
 use_pkg(pkg = c("sendmailR")) 
@@ -152,7 +153,7 @@ use_NVIverse(pkg = c("NVIdb"))
 ## Global variables
 # Paths and file names
 # The path to the outbreak directory.
-domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/subdirs/")
+domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../")
 
 # The name of the main script without extension. 
 # This will also be the name of the Rout-file. 
@@ -173,6 +174,7 @@ file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"),
 ### Check log for errors and warnings
 The function `gather_messages` is used to gather errors and warnings from the log-file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R-versions than the current running the batch. 
 ```{r, include = TRUE} 
+# CHECK LOG FOR ERROR AND WARNING MESSAGES ----
 messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
                             remove_allowed = c("was built under R version"),
                             remove_after = "Ferdig Batch") 
@@ -188,14 +190,16 @@ The subject of the email starts with "Status" if no warning or error messages ar
 
 The email can be sent to one or more email addresses. 
 ```{r, include = TRUE} 
-#needs full path if not in working directory
+# BUILD EMAIL MESSAGE ----
+# Path and name of Rout-file
 attachmentPathName <- paste0(domene, "Rscripts/", batch, ".Rout")
-#same as attachmentPath if using working directory
+# Name of attachment, usually the same as the file name
 attachmentName <- paste0(batch, ".Rout")
-#key part for attachments, put the body and the mime_part in a list for msg
+# Key part for attachments, put the body and the mime_part in a list for msg
 attachmentObject <- mime_part(x = attachmentPathName, name = attachmentName)
 
-# Tar inn feilmeldinger dersom det er noen
+# Include error and warning messages (if any)
+# The subject is customized depending on whether there are error and warning messages or not
 if (length(messages)>0) {
   subject <- paste("Feil i", batch)
   body <- list(c("Feilmeldinger", messages), attachmentObject)
