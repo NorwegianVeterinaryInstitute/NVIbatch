@@ -1,9 +1,14 @@
 NVIbatch 0.2.4.9000 - (2022-0#-##)
 --------------------------
 
+  New features:
+  
+  - For `gather_messages` case is ignored for the arguments `remove_allowed =` and `remove_after =`. 
+  
+
   Other changes:
 
-  - Included the vignette: Run R-scripts automatically.
+  - Created the vignette: Run R-scripts automatically.
 
 
 NVIbatch 0.2.4 - (2022-01-20)
