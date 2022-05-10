@@ -22,9 +22,9 @@ Automatic running of R-scripts at scheduled times is useful for making routine r
 ## Set up Windows Task Scheduler
 You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). The most important points is mentioned below. 
 
-Chose Create task (Opprett oppgave) in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
+Chose "Create task" ("Opprett oppgave") in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
 
-In the tab Triggers (Utløsere), chose new trigger and set up the system for when to run the program. In the tab for Actions (Handlinger), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standardsettings of the tabs Conditions (betingelser) and Settings (Innstillinger).
+In the tab "Triggers" ("Utløsere"), chose new trigger and set up the system for when to run the program. In the tab for "Actions" ("Handlinger"), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standard settings of the tabs "Conditions" ("Betingelser") and "Settings" ("Innstillinger").
 
 We have a dedicated server to run the batch scripts and we use a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
@@ -72,9 +72,9 @@ The main script sources one or more R-scripts that together perform the tasks to
 In this part you want to set up the R-environment for all script that are called (sourced) by the main script. That includes attaching all packages needed and setting up global variables and functions.
 
 #### Attach packages
-In base one use 'library' or 'require' to attach packages. Of these 'library' is preferred as 'require' will not produce an error message if a package isn't attached. 
+In base one use `library` or `require` to attach packages. Of these `library` is preferred as `require` will not produce an error message if a package isn't attached. 
 
-An alternative is to use 'use_pkg' and 'use_NVIverse' from 'NVIbatch'. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use 'use_pkg' for packages at Cran and 'use_NVIverse' for packages within the NVIverse.  If the packages need to be installed, the user running the batch needs writing access to the directories for R-packages.
+An alternative is to use `use_pkg` and `use_NVIverse` from package `NVIbatch`. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use `use_pkg` for packages at "Cran" and `use_NVIverse` for packages within the "NVIverse".  If the packages need to be installed, the user running the batch needs writing access to the directories for R-packages.
 ```{r, include = TRUE}
 # SET UP R-ENVIRONMENT ----
 ## Attach R-packages ----
@@ -84,7 +84,7 @@ use_NVIverse("NVIdb")
 ```
 
 #### Set global variables
-We advise to have one section in which the global variables are set. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script at the batch server cannot be set automatically by package 'here'. 
+The global variables are put in section in the main script. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script at the batch server cannot be set automatically by package `here`. 
 ```{r, include = TRUE}
 ## Paths and filenames ----
 # The path to the R-scripts.
@@ -95,7 +95,7 @@ today <- format(Sys.Date(), "%Y%m%d")
 ```
 
 ### Import support data
-Usually you will combine data with other register, for example to trasnslate PJS-codes to descriptive text, or merge with fylke and kommune registers. Currently such registers must be loaded/imported before used. This may change when such information in stead is stored in databases.  
+Very often you will combine data with information in other registers, for example to translate PJS-codes to descriptive text, or merge with fylke and kommune registers. Currently such registers must be loaded/imported before they can be used. This may change when such information in stead is stored in databases.  
 ```{r, include = TRUE} 
 ## Import support data ----
 # Read translation table for komnr
@@ -103,21 +103,20 @@ kommune_fylke <- read_kommune_fylke()
 ``` 
 
 ### Source the R-scripts 
-These scripts are performing the tasks that shall generate the products and reports. Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity, the names of the scripts in the outbreak report are standardized. 
+These scripts are performing the tasks that shall generate the products and reports. Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity, the names of the scripts in the outbreak report have been standardized. 
 ```{r, include = TRUE} 
-# OUTBREAK REPORT ----
-# Imports data from PJS
-source(paste0(rscripts, "Hent_PJS_data.R"), encoding = "UTF-8")
+#### Create population
+source(paste0(script_path,"source/","prepare_population.R"), encoding = "UTF-8")
 
-# Prepares PJS data for further analysis
-source(paste0(rscripts, "Bearbeid_PJS_data.R"), encoding = "UTF-8")
+# Creates PJSradata
+source(paste0(script_path,"source/","extract_pjs_data.R"), encoding = "UTF-8")
+source(paste0(script_path,"source/","clean_pjs_data.R"), encoding = "UTF-8")
 
-# Make table of received and examined samples
-source(paste0(rscripts, "Tabulate_samples.R"), encoding = "UTF-8")
+# Creates PJSsakprover
+source(paste0(script_path,"source/","prepare_pjs_sakprover.R"), encoding = "UTF-8")
 
-
-# Write the report
-source(paste0(rscripts, "Report_outbreak.R"), encoding = "UTF-8")
+# Creates PJSsaker
+source(paste0(script_path,"source/","prepare_pjs_saker.R"), encoding = "UTF-8")
 
 ``` 
 
@@ -130,16 +129,16 @@ print("Ferdig batch_outbreak")
 ## Write the R-script to check the log
 When running R in batch mode, an Rout-file is automatically created with the output of the log. The aim of this script is to perform a check of the log output after running the main script, and to report any error and warning messages. The script generates an email that is sent to specified persons.
 
-By convenience, the script is named batch_check_log.R (or previously batch_save_log.R) .
+By convenience, the script is named "batch_check_log.R" (or previously "batch_save_log.R") .
 
 The check log script will usually consist of four parts:
 
 - Set up the R-environment.
 - Save the log in the archive.
-- Check the log for warnings and errors.
+- Check the log for warning and error messages.
 - Report the result of the check per email.
 
-There is need for a routine that delete old log files from the log archive as there isn't any need for keeping track of more than the most recent log files. Such a routine hasn't been developed yet. Therefore, old log files must be deleted manually. 
+There is need for a routine that delete old log files from the log archive as there isn't any need for keeping track of more than the most recent log files. Such a routine hasn't been developed yet. Therefore, old log files should be deleted manually. 
 
 ### Set up the R-environment
 The set up of the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. The packages given in this example is the ones that you will need for this script. 
@@ -172,7 +171,7 @@ file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"),
 ``` 
 
 ### Check log for errors and warnings
-The function gather_messages is used to gather errors and warnings from the log-file. The parameter remove_allowed accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with 'grep' and 'ignore.case = TRUE'). Default is c("was built under R version"), which removes warning messages due to using packages being built on later R-versions than the current running the batch. 
+The function `gather_messages` is used to gather errors and warnings from the log-file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R-versions than the current running the batch. 
 ```{r, include = TRUE} 
 messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
                             remove_allowed = c("was built under R version"),
@@ -180,12 +179,12 @@ messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout
 ``` 
 
 ### Send email with the results of the check
-An email that report the status of the check is sendt to specified persons. The email includes:
+An email that report the status of the check is sent to specified persons. The email includes:
 
 - The Rout-file as an attachment
 - The warning and error messages (if any) as a text in the body 
 
-The subject of the email starts with "Status" if no warning or error messages are found. If any wartnig or error messages is identified, the subject starts with "Feil i".
+The subject of the email starts with "Status" if no warning or error messages are found. If any warning or error messages is identified, the subject starts with "Feil i".
 
 The email can be sent to one or more email addresses. 
 ```{r, include = TRUE} 
