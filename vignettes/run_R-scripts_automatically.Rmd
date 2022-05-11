@@ -171,8 +171,8 @@ file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"),
           to = paste0(domene, "batchlog/", batch, " ", today, ".Rout"))
 ``` 
 
-### Check log for errors and warnings
-The function `gather_messages` is used to gather errors and warnings from the log-file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R-versions than the current running the batch. 
+### Check log for error and warning messages 
+The function `gather_messages` is used to gather error and warning messages from the log-file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R-versions than the current running the batch. The parameter `remove_after` accepts å character variable with text that should mark the end of the Rout-file. Any messages after this text will not be reacted on. Default is `remove_allowed = "Ferdig Batch"`. Only parts of the message needs to be written and case is ignored. 
 ```{r, include = TRUE} 
 # CHECK LOG FOR ERROR AND WARNING MESSAGES ----
 messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
@@ -183,8 +183,8 @@ messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout
 ### Send email with the results of the check
 An email that report the status of the check is sent to specified persons. The email includes:
 
-- The Rout-file as an attachment
-- The warning and error messages (if any) as a text in the body 
+- The Rout-file as an attachment. 
+- The warning and error messages (if any) as body text. 
 
 The subject of the email starts with "Status" if no warning or error messages are found. If any warning or error messages is identified, the subject starts with "Feil i".
 
@@ -215,4 +215,6 @@ sendmail(from = "<section@domain.no>",
          msg = body, 
          control = list(smtpServer="domain.no"))
 ``` 
+The batch server will send an email if the task has been run at the server. If an email is not received when expected, this may indicate that the server is down or the user running the tasks have been logged off. If so, one need to restarte the server and or log on with the user acount running the script. 
+
 
