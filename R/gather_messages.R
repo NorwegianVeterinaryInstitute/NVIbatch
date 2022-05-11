@@ -15,12 +15,12 @@
 #'     directory from which R-script is run.
 #'
 #' @param filename The name of the Rout-file.
-#' @param remove_allowed character vector.
-#' @param remove_after character string. Removes all messages after a predefined
-#'     tag, see details. The tag can be set using print() in the R-script producing the
-#'     Rout-file. This may be useful as error messages will be produced at the
-#'     end of Rout-file if the user don't have writing access at the server
-#'     running the R-script.
+#' @param remove_allowed character vector, case is ignored.
+#' @param remove_after character string, case is ignored. Removes all messages
+#'     after a predefined tag, see details. The tag can be set using print() in
+#'     the R-script producing the Rout-file. This may be useful as error messages
+#'     will be produced at the end of Rout-file if the user don't have writing
+#'     access at the server running the R-script.
 #' @export
 #'
 
