@@ -1,9 +1,9 @@
 --- 
-title: "Run R-scripts automatically"
+title: "Run R scripts automatically"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Run R-scripts automatically}
+  %\VignetteIndexEntry{Run R scripts automatically}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -12,82 +12,81 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ## Overview
-Automatic running of R-scripts at scheduled times is useful for making routine reports that should be run regularly, for example outbreak reports and extracting data for statistics like the "Skrantesykestatikk". This vignette describes the different steps to set up an automatic batch Job in Windows.
+Automatic running of R scripts at scheduled times is useful for making routine reports that should run regularly, for example outbreak reports and extracting data for statistics like the "Skrantesykestatikk". This vignette describes the different steps to set up an automatic batch job in Windows.
 
-1. [Set up Windows Task Scheduler to run a bat-script](#set-up-windows-task-scheduler)
-2. [Write the bat-script that run the R-scripts](#write-the-bat-script)
-3. [Write the main R-script](#write-the-main-r-script)
-4. [Write the R-script to check the log](#write-the-r-script-to-check-the-log)
+1. [Set up Windows Task Scheduler to run a batch script](#set-up-windows-task-scheduler)
+2. [Write the bat file that run the R scripts](#write-the-bat-file)
+3. [Write the main R script](#write-the-main-r-script)
+4. [Write the R script to check the log](#write-the-r-script-to-check-the-log)
 
 ## Set up Windows Task Scheduler
-You can use the Task Scheduler in Windows to run an R-script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). The most important points is mentioned below. 
+You can use the Task Scheduler in Windows to run an R script automatically. To set up the Task Scheduler, see [Task Scheduler help](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10). The most important points are mentioned below. 
 
-Chose "Create task" ("Opprett oppgave") in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat-file (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware that this means that you cannot log off when you leave the PC running the batch scripts.
+Chose "Create task" ("Opprett oppgave") in the action tab and fill in the name of the task. Use a name that is descriptive, we suggest to use similar names for the task, the bat file (see below) and fill in a description of the task. For the remaining points you may use the standard selections, i.e. the common user for batch-tasks and run only when the user is logged on. Be aware, this means that you cannot log off when you leave the PC running the batch scripts, i.e. you just disconnect from the external desktop.
 
-In the tab "Triggers" ("Utløsere"), chose new trigger and set up the system for when to run the program. In the tab for "Actions" ("Handlinger"), chose new and select the bat-file that starts the R-scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standard settings of the tabs "Conditions" ("Betingelser") and "Settings" ("Innstillinger").
+In the tab "Triggers" ("Utløsere"), chose new trigger and set up the system for when to run the program. In the tab for "Actions" ("Handlinger"), chose new and select the bat file that starts the R scripts (see below). We have chosen to put all the batch-scripts in a common subdirectory at C:\. There is usually no need to change the standard settings of the tabs "Conditions" ("Betingelser") and "Settings" ("Innstillinger").
 
 We have a dedicated server to run the batch scripts and we use a dedicated user account to set up and run the tasks. Contact epi to get access to a server to host the script.
 
-## Write the bat-script
-The Task manager calls a bat-file to run the R-scripts. We call two R-scripts, the main script that sources several R-scripts to perform various tasks, and an R-script to check the log of the main script and report the status and if there were any error or warning messages.
+## Write the bat file
+The Task manager calls a bat file to run the R scripts. We call two R scripts, the main script that sources several R scripts to perform various tasks, and an R script to check the log of the main script and report the status and if there were any error or warning message.
 
-A typical bat-file can look like this:
+A typical bat file can look like this:
 ```
 "C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak.R"
 "C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_check_log.R"
 ```
 
-Be aware that if the path names to the R-scripts include spaces, the path name must be enclosed in quotes. 
-National characters should be avoided in the path name. If national characters cannot be avoided and the bat-file do not start the R-scripts, this may be due to the national characters. Try the following:
+Be aware, a path name including spaces must be enclosed in quotes. National characters should be avoided in the path name. If national characters are included, the bat file may not find the R scripts. In case, this may be avoided by the following:
 
-- Identify the code page at the Windows server running the bat-file. 
-- Set the code page to the same code page as for the server where the R-scripts are located. 
-- Call the R-scripts
+- Identify the code page at the Windows server running the bat file. 
+- Set the code page to the same code page as for the server where the R scripts are located. 
+- Call the R scripts
 - Reset the code page back to the original code page. 
 
-This can be done automatically in the bat-file. Do not use this code unless necessary, if something goes wrong, you may have changed the code page at the batch server unintentionally. 
+This can be done automatically in the bat file. Do not use this code unless necessary, if something goes wrong, you may have changed the code page at the batch server unintentionally. 
 ```
 :: Save the original code page at the server running the script
 for /f "tokens=4" %%i in ('chcp') do set codepage=%%i
 :: change the code page to the code page of the server with the scripts, for example 850. 
 chcp 850 
-:: Run the R-scripts
+:: Run the R scripts
 "C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_outbreak.R"
 "C:\Program Files\R\R-4.0.3\bin\x64\R.exe" CMD BATCH "\\fullpath\batch_check_log.R"
 :: Reset the code page at the server running the script
 chcp %codepage%
 ```
 
-## Write the main R-script
-Give the main script a short, descriptive name. The name of the main script is included in the bat-file command. To avoid having to edit the bat-file, you should chose a name that you expect will not change. The main script for generating an outbreak report is by convention named batch_outbreak.R.
+## Write the main R script
+Give the main script a short, descriptive name. The name of the main script is included in the bat file command. To avoid having to edit the bat file, you should chose a name that you expect will not change. The main script for generating an outbreak report is by convention named batch_outbreak.R.
 
-The main script sources one or more R-scripts that together perform the tasks to generate a product, for example a report. The batch script will usually consist of four parts:
+The main script sources one or more R scripts that together perform the tasks to generate a product, for example a report. The batch script will usually consist of four parts:
 
-- Set up the R-environment.
+- Set up the R environment.
 - Import support registers
-- Source the R-scripts.
+- Source the R scripts.
 - Mark the end of the main script.
 
-### Set up the R-environment
-In this part you want to set up the R-environment for all script that are called (sourced) by the main script. That includes attaching all packages needed and setting up global variables and functions.
+### Set up the R environment
+In this part, you want to set up the R environment for all script that are called (sourced) by the main script. That includes attaching all packages needed and setting up global variables and functions.
 
 #### Attach packages
 In base one use `library` or `require` to attach packages. Of these `library` is preferred as `require` will not produce an error message if a package isn't attached. 
 
-An alternative is to use `use_pkg` and `use_NVIverse` from package `NVIbatch`. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use `use_pkg` for packages at "Cran" and `use_NVIverse` for packages within the "NVIverse".  If the packages need to be installed, the user running the batch needs writing access to the directories for R-packages.
+An alternative is to use `use_pkg` and `use_NVIverse` from package `NVIbatch`. These functions accept a vector with package names and will attach the packages if installed, and install the package first if not installed. Use `use_pkg` for packages at "Cran" and `use_NVIverse` for packages within the "NVIverse".  If the packages need to be installed, the user running the batch needs writing access to the directories for R packages.
 ```{r, include = TRUE}
-# SET UP R-ENVIRONMENT ----
-## Attach R-packages ----
+# SET UP R ENVIRONMENT ----
+## Attach R packages ----
 library(NVIbatch)
 use_pkg(pkg = c("dplyr", "RODBC"))
 use_NVIverse("NVIdb")
 ```
 
 #### Set global variables
-The global variables are put in section in the main script. In this example there are two global variables, the path to the R-scripts and today's date. The path to the R-script at the batch server cannot be set automatically by package `here`. 
+The global variables are put in section in the main script. In this example, there are two global variables, the path to the R scripts and today's date. The path to the R script at the batch server cannot be set automatically by package `here`. 
 ```{r, include = TRUE}
 ## Paths and filenames ----
-# The path to the R-scripts.
+# The path to the R scripts.
 script_path <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../rscripts/")
 
 # Today's date in the format yyyymmdd for use in filenames.
@@ -95,14 +94,14 @@ today <- format(Sys.Date(), "%Y%m%d")
 ```
 
 ### Import support data
-Very often you will combine data with information in other registers, for example to translate PJS-codes to descriptive text, or merge with fylke and kommune registers. Currently such registers must be loaded/imported before they can be used. This may change when such information in stead is stored in databases.  
+Very often, you will combine data with information in other registers, for example to translate PJS-codes to descriptive text, or merge with fylke (county) and kommune (municipality) registers. Currently such registers must be loaded/imported before they can be used. This may change when such information becomes stored in databases.  
 ```{r, include = TRUE} 
 ## Import support data ----
 # Read translation table for komnr
 kommune_fylke <- read_kommune_fylke()
 ``` 
 
-### Source the R-scripts 
+### Source the R scripts 
 These scripts are performing the tasks that shall generate the products and reports. Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity, the names of the scripts in the outbreak report have been standardized. 
 ```{r, include = TRUE} 
 #### Create population
@@ -121,30 +120,30 @@ source(paste0(script_path,"source/","prepare_pjs_saker.R"), encoding = "UTF-8")
 ``` 
 
 ### Mark the end of the main script
-Depending of the set up of the batch job, the output log can end with error messages due to lack of writing access. These errors has no importance for the output from the R-scripts and therefore there is no need to include them in a check of the log (see below). This can be avoided by printing a message at the end of the main script to mark the end. In the check log, one check for error and warning messages until the end-mark, and skip messages afterwards. There is no need for this step unless you run the check log step. 
+Depending of the setup of the batch job, the output log can end with error messages due to lack of writing access. These errors has no importance for the output from the R scripts and therefore there is no need to include them in a check of the log (see below). This can be avoided by printing a message at the end of the main script to mark the end. In the check log, one check for error and warning messages until the end-mark, and skip messages afterwards. There is no need for this step unless you run the check log step. 
 ```{r, include = TRUE} 
 print("Ferdig batch_outbreak")
 ``` 
 
-## Write the R-script to check the log
-When running R in batch mode, an Rout-file is automatically created with the output of the log. The aim of this script is to perform a check of the log output after running the main script, and to report any error and warning messages. The script generates an email that is sent to specified persons.
+## Write the R script to check the log
+When running R in batch mode, an Rout file is automatically created with the output of the log. The aim of this script is to perform a check of the log output after running the main script, and to report any error or warning message. The script generates an email that is sent to specified email addresses.
 
-By convenience, the script is named "batch_check_log.R" (or previously "batch_save_log.R") .
+By convenience, the script is named "batch_check_log.R" (or previously "batch_save_log.R").
 
 The check log script will usually consist of four parts:
 
-- Set up the R-environment.
+- Set up the R environment.
 - Save the log in the archive.
 - Check the log for warning and error messages.
 - Report the result of the check per email.
 
 There is need for a routine that delete old log files from the log archive as there isn't any need for keeping track of more than the most recent log files. Such a routine hasn't been developed yet. Therefore, old log files should be deleted manually. 
 
-### Set up the R-environment
-The set up of the R-environment is done comparable to the set up the R-environment for the main script. An example is given below. The packages given in this example is the ones that you will need for this script. 
+### Set up the R environment
+The setup of the R environment is done comparable to the setup the R environment for the main script. An example is given below. The packages given in this example is the ones that you will need for this script. 
 
 ```{r, include = TRUE} 
-# SET UP R-ENVIRONMENT ----
+# SET UP R ENVIRONMENT ----
 ## Attach packages
 library(NVIbatch) 
 use_pkg(pkg = c("sendmailR")) 
@@ -156,7 +155,7 @@ use_NVIverse(pkg = c("NVIdb"))
 domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../")
 
 # The name of the main script without extension. 
-# This will also be the name of the Rout-file. 
+# This will also be the name of the Rout file. 
 batch <- "batch_outbreak" 
 
 # Today's date in the format yyyymmdd for use in filenames.
@@ -164,15 +163,15 @@ today <- format(Sys.Date(), "%Y%m%d")
 ```
 
 ### Save the log in the archive
-The Rout-file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlog". 
+The Rout file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlog". 
 ```{r, include = TRUE} 
-# Save the Rout-file ----
+# Save the Rout file ----
 file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"), 
           to = paste0(domene, "batchlog/", batch, " ", today, ".Rout"))
 ``` 
 
 ### Check log for error and warning messages 
-The function `gather_messages` is used to gather error and warning messages from the log-file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R-versions than the current running the batch. The parameter `remove_after` accepts å character variable with text that should mark the end of the Rout-file. Any messages after this text will not be reacted on. Default is `remove_allowed = "Ferdig Batch"`. Only parts of the message needs to be written and case is ignored. 
+The function `gather_messages` is used to gather error and warning messages from the log file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is done with with `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R versions than the current running the batch. The parameter `remove_after` accepts å character variable with text that should mark the end of the Rout file. Any messages after this text will not be reacted upon. Default is `remove_allowed = "Ferdig Batch"`. Only parts of the message needs to be written and case is ignored. 
 ```{r, include = TRUE} 
 # CHECK LOG FOR ERROR AND WARNING MESSAGES ----
 messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
@@ -181,9 +180,9 @@ messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout
 ``` 
 
 ### Send email with the results of the check
-An email that report the status of the check is sent to specified persons. The email includes:
+An email that report the status of the check is sent to specified email addresses The email includes:
 
-- The Rout-file as an attachment. 
+- The Rout file as an attachment. 
 - The warning and error messages (if any) as body text. 
 
 The subject of the email starts with "Status" if no warning or error messages are found. If any warning or error messages is identified, the subject starts with "Feil i".
@@ -191,7 +190,7 @@ The subject of the email starts with "Status" if no warning or error messages ar
 The email can be sent to one or more email addresses. 
 ```{r, include = TRUE} 
 # BUILD EMAIL MESSAGE ----
-# Path and name of Rout-file
+# Path and name of Rout file
 attachmentPathName <- paste0(domene, "Rscripts/", batch, ".Rout")
 # Name of attachment, usually the same as the file name
 attachmentName <- paste0(batch, ".Rout")
@@ -210,11 +209,11 @@ if (length(messages)>0) {
 
 # SEND EMAIL ----
 sendmail(from = "<section@domain.no>",
-         to = c("<Responsible.Person@domain.no>"),
+         to = c("<responsible.person@domain.no>"),
          subject = subject,
          msg = body, 
          control = list(smtpServer="domain.no"))
 ``` 
-The batch server will send an email if the task has been run at the server. If an email is not received when expected, this may indicate that the server is down or the user running the tasks have been logged off. If so, one need to restarte the server and or log on with the user acount running the script. 
+The batch server will send an email if the task has been run at the server. If no email is received when expected, this may indicate that the server is down or the user running the tasks have been logged off. If so, one need to restart the server and/or log on with the user account running the script. 
 
 
