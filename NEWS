@@ -8,7 +8,7 @@ NVIbatch 0.2.4.9000 - (2022-0#-##)
 
   Other changes:
 
-  - Created the vignette: Run R-scripts automatically.
+  - Created the vignette: Run R scripts automatically. Thanks to Johan Åkerstedt for reviewing the draft of the vignette.
 
 
 NVIbatch 0.2.4 - (2022-01-20)
