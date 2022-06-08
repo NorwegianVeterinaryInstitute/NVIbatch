@@ -1,4 +1,4 @@
-# NVIbatch: Tools to facilitate the running of R-scripts in batch mode at NVI
+# NVIbatch: Tools to facilitate the running of R-scripts in batch mode at NVI <img src="man/figures/NVIbatch_logo.png" align="right" height="138" />
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
