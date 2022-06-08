@@ -48,8 +48,10 @@ The `NVIbatch` package needs to be attached.
 
     library(NVIbatch)
 
-`NVIbatch`provides tools to facilitate the writing of batch R-scripts
-that should be run automatically at specific times.
+`NVIbatch` provides tools to facilitate the writing of batch R-scripts
+that should be run automatically at specific times. The vignette “Run R
+scripts automatically” gives a detailed description on how you can set
+up an automatic batch job to run an R script on Windows.
 
 The full list of all available functions and datasets can be accessed by
 typing
