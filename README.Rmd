@@ -56,8 +56,8 @@ description <- desc::desc_get_field(key = "Description")
 ```
 
 `r paste0(NVIpkg_inline, 
-   "", 
-   sub(substr(description,1,1), tolower(substr(description,1,1)), description))`
+   " ", 
+   sub(substr(description,1,1), tolower(substr(description,1,1)), description))` The vignette "Run R scripts automatically" gives a detailed description on how you can set up an automatic batch job to run an R script on Windows.
 
 ```{r child=system.file('templates', "README_usage_help.Rmd", package = "NVIpackager")}
 ```
