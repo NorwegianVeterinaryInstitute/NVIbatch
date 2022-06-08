@@ -15,12 +15,12 @@
 #'     directory from which R-script is run.
 #'
 #' @param filename The name of the Rout-file.
-#' @param remove_allowed character vector.
-#' @param remove_after character string. Removes all messages after a predefined
-#'     tag, see details. The tag can be set using print() in the R-script producing the
-#'     Rout-file. This may be useful as error messages will be produced at the
-#'     end of Rout-file if the user don't have writing access at the server
-#'     running the R-script.
+#' @param remove_allowed character vector, case is ignored.
+#' @param remove_after character string, case is ignored. Removes all messages
+#'     after a predefined tag, see details. The tag can be set using print() in
+#'     the R-script producing the Rout-file. This may be useful as error messages
+#'     will be produced at the end of Rout-file if the user don't have writing
+#'     access at the server running the R-script.
 #' @export
 #'
 
@@ -65,7 +65,7 @@ gather_messages <- function(filename,
   # Identifies lines with allowed warnings
   if (!is.null(remove_allowed) && trimws(remove_allowed) != "") {
     for (i in 1:length(remove_allowed)) {
-      allowed <- grep(remove_allowed[i], logfile)
+      allowed <- grep(pattern = remove_allowed[i], x = logfile, ignore.case = TRUE)
       if (i == 1) {
         allowed_lines <- allowed
       } else {
@@ -79,7 +79,7 @@ gather_messages <- function(filename,
 
   # Removes messages after a defined tag that can be set with print()
   if (!is.null(remove_after) && trimws(remove_after) != "") {
-    finished <- grep(remove_after, logfile)
+    finished <- grep(pattern = remove_after, x = logfile, ignore.case = TRUE)
   }
   if (exists("finished")) {
     if (length(finished) > 0) {

@@ -1,4 +1,4 @@
-# TEST, DOCUMENT AND BUILD NVIdb PACKAGE
+# TEST, DOCUMENT AND BUILD THE PACKAGE
 
 # SET UP ENVIRONMENT ----
 # rm(list = ls())    # Benyttes for å tømme R-environment ved behov
@@ -17,26 +17,19 @@ pkg <- stringi::stri_extract_last_words(pkg_path)
 # create_NVIpkg_skeleton(license_keyword = "CC BY 4.0")
 
 # DOCUMENTATION AND STYLING ----
+# update_loge should be run if a logo has been created (or updated). Thereafter use "readme = TRUE"
+# update_logo(pkg = pkg, pkg_path = pkg_path)
+
 # Creates new help files
 # Should be run before git push when documentation for functions have been changed
 NVIpackager::document_NVIpkg(style = TRUE,
                              contributing = FALSE,
                              readme = FALSE,
+                             manual = "update",
                              scope = c("spaces", "line_breaks"))
 
 
 # spelling::spell_check_package(vignettes = TRUE, use_wordlist = TRUE)
-
-
-# Alternative for creating the PDF-manual. The manual is not put in the correct directory
-# system(paste(shQuote(file.path(R.home("bin"), "R")),
-#              "CMD",
-#              "Rd2pdf",
-#              paste0("../", pkg)))
-# file.copy(from = paste0(pkg, ".pdf"), to = "./vignettes", overwrite = TRUE)
-# file.remove(".Rd2pdf16372")
-# file.remove("NVIdb.pdf")
-# check .install_extras
 
 # TEST PACKAGE ----
 # Run tests included in ./tests.

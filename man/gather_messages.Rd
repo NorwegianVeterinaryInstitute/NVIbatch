@@ -13,13 +13,13 @@ gather_messages(
 \arguments{
 \item{filename}{The name of the Rout-file.}
 
-\item{remove_allowed}{character vector.}
+\item{remove_allowed}{character vector, case is ignored.}
 
-\item{remove_after}{character string. Removes all messages after a predefined
-tag, see details. The tag can be set using print() in the R-script producing the
-Rout-file. This may be useful as error messages will be produced at the
-end of Rout-file if the user don't have writing access at the server
-running the R-script.}
+\item{remove_after}{character string, case is ignored. Removes all messages
+after a predefined tag, see details. The tag can be set using print() in
+the R-script producing the Rout-file. This may be useful as error messages
+will be produced at the end of Rout-file if the user don't have writing
+access at the server running the R-script.}
 }
 \description{
 Reads the Rout-file generated when running R in batch mode.
