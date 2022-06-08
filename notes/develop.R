@@ -1,4 +1,4 @@
-# TEST, DOCUMENT AND BUILD NVIdb PACKAGE
+# TEST, DOCUMENT AND BUILD THE PACKAGE
 
 # SET UP ENVIRONMENT ----
 # rm(list = ls())    # Benyttes for å tømme R-environment ved behov
@@ -17,6 +17,9 @@ pkg <- stringi::stri_extract_last_words(pkg_path)
 # create_NVIpkg_skeleton(license_keyword = "CC BY 4.0")
 
 # DOCUMENTATION AND STYLING ----
+# update_loge should be run if a logo has been created (or updated). Thereafter use "readme = TRUE"
+# update_logo(pkg = pkg, pkg_path = pkg_path)
+
 # Creates new help files
 # Should be run before git push when documentation for functions have been changed
 NVIpackager::document_NVIpkg(style = TRUE,
