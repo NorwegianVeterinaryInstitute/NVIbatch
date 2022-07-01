@@ -29,8 +29,8 @@ NVIpackager::document_NVIpkg(pkg = pkg,
                              pkg_path = pkg_path,
                              style = TRUE,
                              manual = "update",
-                             contributing = TRUE,
-                             readme = TRUE,
+                             contributing = FALSE,
+                             readme = FALSE,
                              scope = c("spaces", "line_breaks"))
 
 # spelling::spell_check_package(vignettes = TRUE, use_wordlist = TRUE)
