@@ -9,6 +9,11 @@ NVIbatch 0.3.0.9000 - (2022-##-##)
   Other changes:
   
   - 
+  
+  
+  BREAKING CHANGES
+  
+  - In use_NVIverse were default input for build_manual changed to build_manual = FALSE.
 
 
 NVIbatch 0.3.0 - (2022-06-08)
