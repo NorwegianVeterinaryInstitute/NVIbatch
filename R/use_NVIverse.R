@@ -2,7 +2,7 @@
 #' @description First, use_NVIverse checks if the package is installed. If not
 #'     already installed, the package will be installed. Thereafter, the package
 #'     is attached using library.
-#' @details Only packages within NVIverse are installed.
+#' @details Only packages within the NVIverse can be installed.
 #' @param pkg A vector with the name of one or more NVIverse packages.
 #' @param auth_token To install NVIconfig a personal access token is needed. Generate a personal
 #'     access token (PAT) in "https://github.com/settings/tokens" and
@@ -17,10 +17,10 @@
 #' @param upgrade Should package dependencies be upgraded? One of "ask", "always", or "never".
 #'     \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
 #'     respectively. Defaults to \code{FALSE}.
-#' @param build If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.
-#' @param build_manual If \code{FALSE}, don't build PDF manual ('--no-manual').
-#'     Defaults to \code{TRUE}.
-#' @param build_vignettes If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
+#' @param build \[\code{logical}\]. If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.
+#' @param build_manual \[\code{logical}\]. If \code{FALSE}, don't build PDF manual ('--no-manual').
+#'     Defaults to \code{FALSE}.
+#' @param build_vignettes \[\code{logical}\]. If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
 #'     Defaults to \code{TRUE}.
 #' @param \dots Other arguments to be passed to install_github.
 
@@ -33,7 +33,7 @@ use_NVIverse <- function(pkg,
                          dependencies = NA,
                          upgrade = FALSE,
                          build = TRUE,
-                         build_manual = TRUE,
+                         build_manual = FALSE,
                          build_vignettes = TRUE,
                          ...) {
   # ARGUMENT CHECKING ----

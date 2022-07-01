@@ -10,7 +10,7 @@ use_NVIverse(
   dependencies = NA,
   upgrade = FALSE,
   build = TRUE,
-  build_manual = TRUE,
+  build_manual = FALSE,
   build_vignettes = TRUE,
   ...
 )
@@ -34,12 +34,12 @@ and is the default.}
 \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
 respectively. Defaults to \code{FALSE}.}
 
-\item{build}{If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.}
+\item{build}{[\code{logical}]. If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.}
 
-\item{build_manual}{If \code{FALSE}, don't build PDF manual ('--no-manual').
-Defaults to \code{TRUE}.}
+\item{build_manual}{[\code{logical}]. If \code{FALSE}, don't build PDF manual ('--no-manual').
+Defaults to \code{FALSE}.}
 
-\item{build_vignettes}{If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
+\item{build_vignettes}{[\code{logical}]. If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
 Defaults to \code{TRUE}.}
 
 \item{\dots}{Other arguments to be passed to install_github.}
@@ -50,7 +50,7 @@ already installed, the package will be installed. Thereafter, the package
 is attached using library.
 }
 \details{
-Only packages within NVIverse are installed.
+Only packages within the NVIverse can be installed.
 }
 \examples{
 use_NVIverse("NVIcheckmate")
