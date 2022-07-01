@@ -16,9 +16,9 @@ that should be run automatically at specific times.
 `NVIbatch` is part of `NVIverse`, a collection of R-packages with tools
 to facilitate data management and data reporting at the Norwegian
 Veterinary Institute (NVI). The NVIverse consists of the following
-packages: NVIconfig, NVIdb, NVIpretty, NVIbatch, OKplan, OKcheck,
-NVIcheckmate, NVIpackager, NVIrpackages. See the vignette “Contribute to
-NVIbatch” for more information.
+packages: NVIconfig, NVIdb, NVIspatial, NVIpretty, NVIbatch, OKplan,
+OKcheck, NVIcheckmate, NVIpackager, NVIrpackages. See the vignette
+“Contribute to NVIbatch” for more information.
 
 ## Installation
 
@@ -26,7 +26,7 @@ NVIbatch” for more information.
 [GitHub](https://github.com/NorwegianVeterinaryInstitute). To install
 `NVIbatch` you will need:
 
--   R version > 4.0.0
+-   R version &gt; 4.0.0
 -   R package `remotes`
 -   Rtools 4.0
 
@@ -39,8 +39,7 @@ To install (or update) the `NVIbatch` package, run the following code:
 
     remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch",
         upgrade = FALSE,
-        build = TRUE,
-        build_manual = TRUE)
+        build = TRUE)
 
 ## Usage
 
