@@ -67,44 +67,40 @@ use_NVIverse <- function(pkg,
 
   }
 
-  if (NVIcheckmate_installed) {
-    # dependencies
-    NVIcheckmate::assert(checkmate::check_logical(dependencies),
-                         checkmate::check_subset(dependencies,
-                                                 choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
-                         combine = "or",
-                         add = checks)
-    # upgrade
-    NVIcheckmate::assert(checkmate::check_logical(upgrade),
-                         checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
-                         combine = "or",
-                         add = checks)
-  }
+  # if (NVIcheckmate_installed) {
+  # dependencies
+  checkmate::assert(checkmate::check_flag(dependencies, na.ok = TRUE),
+                    checkmate::check_subset(dependencies,
+                                            choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
+                    combine = "or",
+                    add = checks)
+  # upgrade
+  checkmate::assert(checkmate::check_flag(upgrade),
+                    checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
+                    combine = "or",
+                    add = checks)
+  # }
   # build
-  checkmate::assert_logical(build, add = checks)
+  checkmate::assert_flag(build, add = checks)
   # build_manual
-  checkmate::assert_logical(build_manual, add = checks)
+  checkmate::assert_flag(build_manual, add = checks)
   # build_vignettes
-  checkmate::assert_logical(build_vignettes, add = checks)
+  checkmate::assert_flag(build_vignettes, add = checks)
 
   # Report check-results
   checkmate::reportAssertions(checks)
 
-  if (!NVIcheckmate_installed) {
-    # dependencies
-    checkmate::assert(checkmate::check_logical(dependencies),
-                      checkmate::check_subset(dependencies,
-                                              choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
-                      combine = "or")
-    # upgrade
-    NVIcheckmate::assert(checkmate::check_logical(upgrade),
-                         checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
-                         combine = "or")
-  }
-
-  # For NVIdb::get_PAT NVIdb::set_PAT must previously have been run at the current PC for the current user
-  #   set_PAT and get_PAT are only available in NVIdb v0.1.8 and later.
-  # set_PAT("GitHub")
+  # if (!NVIcheckmate_installed) {
+  #   # dependencies
+  #   checkmate::assert(checkmate::check_flag(dependencies),
+  #                     checkmate::check_subset(dependencies,
+  #                                             choices = c("Depends", "Imports", "LinkingTo", "Suggests", "Enhances")),
+  #                     combine = "or")
+  #   # upgrade
+  #   checkmate::assert(checkmate::check_flag(upgrade),
+  #                     checkmate::check_choice(upgrade, choices = c("ask", "always", "never")),
+  #                     combine = "or")
+  # }
 
 
   # RUN SCRIPT ----
