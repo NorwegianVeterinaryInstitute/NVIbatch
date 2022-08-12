@@ -8,12 +8,12 @@ NVIbatch 0.3.0.9000 - (2022-##-##)
 
   Other changes:
   
-  - 
+  - Improved argument checking in use_NVIverse by implementing checkmate 2.1.0
   
   
   BREAKING CHANGES
   
-  - In use_NVIverse were default input for build_manual changed to build_manual = FALSE to avoid problems that may occur if the pdf-file cannot be generated. 
+  - In use_NVIverse the default input for build_manual were changed to build_manual = FALSE to avoid problems that may occur if the pdf-file cannot be generated. 
 
 
 NVIbatch 0.3.0 - (2022-06-08)
