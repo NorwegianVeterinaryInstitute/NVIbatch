@@ -22,7 +22,7 @@ use_pkg <- function(pkg, repos = "https://cran.uib.no/", ...) {
   # Perform checks
   checkmate::assert_character(pkg, min.chars = 1, any.missing = FALSE, min.len = 1, add = checks)
 
-  checkmate::assert_character(repos, max.len = 1, add = checks)
+  checkmate::assert_character(repos, min.chars = 1, any.missing = FALSE, len = 1, add = checks)
 
   # Report check-results
   checkmate::reportAssertions(checks)
