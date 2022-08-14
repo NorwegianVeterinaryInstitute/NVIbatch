@@ -26,7 +26,7 @@ OKcheck, NVIcheckmate, NVIpackager, NVIrpackages. See the vignette
 [GitHub](https://github.com/NorwegianVeterinaryInstitute). To install
 `NVIbatch` you will need:
 
--   R version &gt; 4.0.0
+-   R version > 4.0.0
 -   R package `remotes`
 -   Rtools 4.0
 
@@ -39,7 +39,8 @@ To install (or update) the `NVIbatch` package, run the following code:
 
     remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch",
         upgrade = FALSE,
-        build = TRUE)
+        build = TRUE,
+        build_vignettes = TRUE)
 
 ## Usage
 
