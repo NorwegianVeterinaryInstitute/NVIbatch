@@ -1,23 +1,18 @@
-NVIbatch 0.3.0.9000 - (2022-##-##)
---------------------------
-
-  New features:
-  
-  - 
-  
+NVIbatch 0.3.1 - (2022-08-15)
+----------------------------
 
   Other changes:
   
   - Improved argument checking in use_NVIverse by implementing checkmate 2.1.0
   
   
-  BREAKING CHANGES
+  BREAKING CHANGES:
   
   - In use_NVIverse the default input for build_manual were changed to build_manual = FALSE to avoid problems that may occur if the pdf-file cannot be generated. 
 
 
 NVIbatch 0.3.0 - (2022-06-08)
---------------------------
+----------------------------
 
   New features:
   
@@ -32,7 +27,7 @@ NVIbatch 0.3.0 - (2022-06-08)
 
 
 NVIbatch 0.2.4 - (2022-01-20)
---------------------------
+----------------------------
 
   Bug fixes:
 
@@ -40,7 +35,7 @@ NVIbatch 0.2.4 - (2022-01-20)
 
 
 NVIbatch 0.2.3 - (2021-11-30)
---------------------------
+----------------------------
 
   Bug fixes:
 
@@ -48,7 +43,7 @@ NVIbatch 0.2.3 - (2021-11-30)
 
 
 NVIbatch 0.2.2 - (2021-10-01)
---------------------------
+----------------------------
 
   Other changes:
 
@@ -56,7 +51,7 @@ NVIbatch 0.2.2 - (2021-10-01)
 
 
 NVIbatch 0.2.1 - (2021-09-28)
---------------------------
+----------------------------
 
   Bug fixes:
 
@@ -66,7 +61,7 @@ NVIbatch 0.2.1 - (2021-09-28)
 
 
 NVIbatch 0.2.0 - (2021-09-07)
---------------------------
+----------------------------
 
   New features:
 
@@ -83,20 +78,20 @@ NVIbatch 0.2.0 - (2021-09-07)
 
 
 NVIbatch 0.1.1 - (2021-05-20)
---------------------------
+----------------------------
 
   Bug fixes:
 
   - gather_messages now accepts `NULL` for `remove_allowed` and `remove_after`.
 
 
-  Breacking changes:
+  BREAKING CHANGES:
 
   - renamed to use_pkg to avoid conflict with usethis::use_package.
 
 
 NVIbatch 0.1.0 - (2021-05-19)
---------------------------
+----------------------------
 
   First release:
 

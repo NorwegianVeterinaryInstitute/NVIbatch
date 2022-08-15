@@ -1,7 +1,7 @@
 Package: NVIbatch
 Title: Tools to facilitate the running of R-scripts in batch mode at NVI
-Version: 0.3.0.9000
-Date: 2022-##-##
+Version: 0.3.1
+Date: 2022-08-15
 Authors@R: 
   c(person(given = "Petter",
            family = "Hopp",
