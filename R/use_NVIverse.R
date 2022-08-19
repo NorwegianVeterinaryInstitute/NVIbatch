@@ -1,28 +1,33 @@
-#' @title Attach and if necessary install packages within NVIverse
-#' @description First, use_NVIverse checks if the package is installed. If not
+#' @title Attach and if necessary install packages within `NVIverse`
+#' @description First, `use_NVIverse` checks if the package is installed. If not
 #'     already installed, the package will be installed. Thereafter, the package
 #'     is attached using library.
-#' @details Only packages within the NVIverse can be installed.
-#' @param pkg A vector with the name of one or more NVIverse packages.
-#' @param auth_token To install NVIconfig a personal access token is needed. Generate a personal
+#' @details Only packages within the `NVIverse` can be installed.
+#' @param pkg A vector with the name of one or more `NVIverse` packages.
+#' @param auth_token To install `NVIconfig` a personal access token is needed. Generate a personal
 #'     access token (PAT) in "https://github.com/settings/tokens" and
 #'     supply to this argument. Defaults to \code{NULL}.
-#' @param dependencies The dependencies to check and eventually install. Can be
+#' @param dependencies \[\code{logical(1)}\] or \[\code{character}\]\cr
+#' The dependencies to check and eventually install. Can be
 #'     a character vector (selecting from "Depends", "Imports", "LinkingTo",
-#'     "Suggests", or "Enhances"), or a logical vector. \code{TRUE} is shorthand
-#'     for c("Depends", "Imports", "LinkingTo", "Suggests"). \code{FALSE} is
+#'     "Suggests", or "Enhances"), or a logical vector. `TRUE` is shorthand
+#'     for c("Depends", "Imports", "LinkingTo", "Suggests"). `FALSE` is
 #'     shorthand for no dependencies, i.e. just check this package, not its
 #'     dependencies. \code{NA} is shorthand for c("Depends", "Imports", "LinkingTo")
 #'     and is the default.
-#' @param upgrade Should package dependencies be upgraded? One of "ask", "always", or "never".
-#'     \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
-#'     respectively. Defaults to \code{FALSE}.
-#' @param build \[\code{logical}\]. If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.
-#' @param build_manual \[\code{logical}\]. If \code{FALSE}, don't build PDF manual ('--no-manual').
-#'     Defaults to \code{FALSE}.
-#' @param build_vignettes \[\code{logical}\]. If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
-#'     Defaults to \code{TRUE}.
-#' @param \dots Other arguments to be passed to install_github.
+#' @param upgrade \[\code{logical(1)}\] or \[\code{character}\]\cr
+#' Should package dependencies be upgraded? One of "ask", "always", or "never".
+#'     `TRUE` and `FALSE` are also accepted and correspond to "always" and "never"
+#'     respectively. Defaults to `FALSE`.
+#' @param build \[\code{logical(1)}\]\cr
+#' If `TRUE` build the package before installing. Defaults to `TRUE`.
+#' @param build_manual \[\code{logical(1)}\]\cr
+#' If `FALSE`, don't build PDF manual ('--no-manual').
+#'     Defaults to `FALSE`.
+#' @param build_vignettes \[\code{logical(1)}\]\cr
+#' If `FALSE`, don't build package vignettes ("--no-build-vignettes").
+#'     Defaults to `TRUE`.
+#' @param \dots Other arguments to be passed to `install_github`.
 
 #' @export
 #' @examples

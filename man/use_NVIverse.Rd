@@ -2,7 +2,7 @@
 % Please edit documentation in R/use_NVIverse.R
 \name{use_NVIverse}
 \alias{use_NVIverse}
-\title{Attach and if necessary install packages within NVIverse}
+\title{Attach and if necessary install packages within \code{NVIverse}}
 \usage{
 use_NVIverse(
   pkg,
@@ -16,13 +16,14 @@ use_NVIverse(
 )
 }
 \arguments{
-\item{pkg}{A vector with the name of one or more NVIverse packages.}
+\item{pkg}{A vector with the name of one or more \code{NVIverse} packages.}
 
-\item{auth_token}{To install NVIconfig a personal access token is needed. Generate a personal
+\item{auth_token}{To install \code{NVIconfig} a personal access token is needed. Generate a personal
 access token (PAT) in "https://github.com/settings/tokens" and
 supply to this argument. Defaults to \code{NULL}.}
 
-\item{dependencies}{The dependencies to check and eventually install. Can be
+\item{dependencies}{[\code{logical(1)}] or [\code{character}]\cr
+The dependencies to check and eventually install. Can be
 a character vector (selecting from "Depends", "Imports", "LinkingTo",
 "Suggests", or "Enhances"), or a logical vector. \code{TRUE} is shorthand
 for c("Depends", "Imports", "LinkingTo", "Suggests"). \code{FALSE} is
@@ -30,27 +31,31 @@ shorthand for no dependencies, i.e. just check this package, not its
 dependencies. \code{NA} is shorthand for c("Depends", "Imports", "LinkingTo")
 and is the default.}
 
-\item{upgrade}{Should package dependencies be upgraded? One of "ask", "always", or "never".
+\item{upgrade}{[\code{logical(1)}] or [\code{character}]\cr
+Should package dependencies be upgraded? One of "ask", "always", or "never".
 \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
 respectively. Defaults to \code{FALSE}.}
 
-\item{build}{[\code{logical}]. If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.}
+\item{build}{[\code{logical(1)}]\cr
+If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.}
 
-\item{build_manual}{[\code{logical}]. If \code{FALSE}, don't build PDF manual ('--no-manual').
+\item{build_manual}{[\code{logical(1)}]\cr
+If \code{FALSE}, don't build PDF manual ('--no-manual').
 Defaults to \code{FALSE}.}
 
-\item{build_vignettes}{[\code{logical}]. If \code{FALSE}, don't build package vignettes ('--no-build-vignettes').
+\item{build_vignettes}{[\code{logical(1)}]\cr
+If \code{FALSE}, don't build package vignettes ("--no-build-vignettes").
 Defaults to \code{TRUE}.}
 
-\item{\dots}{Other arguments to be passed to install_github.}
+\item{\dots}{Other arguments to be passed to \code{install_github}.}
 }
 \description{
-First, use_NVIverse checks if the package is installed. If not
+First, \code{use_NVIverse} checks if the package is installed. If not
 already installed, the package will be installed. Thereafter, the package
 is attached using library.
 }
 \details{
-Only packages within the NVIverse can be installed.
+Only packages within the \code{NVIverse} can be installed.
 }
 \examples{
 use_NVIverse("NVIcheckmate")
