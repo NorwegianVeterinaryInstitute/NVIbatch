@@ -10,14 +10,14 @@ use_pkg(pkg, repos = "https://cran.uib.no/", ...)
 \item{pkg}{A vector with the name of one or more packages.}
 
 \item{repos}{character vector, the base URL(s) of the repositories to use,
-e.g., the URL of a CRAN mirror such as "https://cloud.r-project.org". Can
-be NULL to install from local files, directories or URLs: this will be
+e.g., the URL of a Cran mirror such as "https://cloud.r-project.org". Can
+be \code{NULL} to install from local files, directories or URLs: this will be
 inferred by extension from pkgs if of length one.}
 
-\item{\dots}{Other arguments to be passed to install.packages.}
+\item{\dots}{Other arguments to be passed to \code{install.packages}.}
 }
 \description{
-First, use_package checks if the package is installed. If not
+First, \code{use_package} checks if the package is installed. If not
 already installed, the package will be installed. Thereafter, the package
 is attached using library.
 }
