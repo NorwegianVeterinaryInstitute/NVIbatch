@@ -1,9 +1,11 @@
-NVIbatch 0.3.1 - (2022-08-15)
+NVIbatch 0.3.1 - (2022-08-20)
 ----------------------------
 
   Other changes:
   
   - Improved argument checking in use_NVIverse by implementing checkmate 2.1.0
+  
+  - Updated documentation including improved README installation guide.
   
   
   BREAKING CHANGES:
