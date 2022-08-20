@@ -8,7 +8,7 @@
 #'     removed. These warnings indicate that the package was built for a later
 #'     R-version than the version used to run the R-script.
 #'
-#'     \code{remove_after} is used to remove all messages after a predefined
+#' \code{remove_after} is used to remove all messages after a predefined
 #'     tag. The tag can be set using print() in the R-script producing the
 #'     Rout-file. This may be useful as error messages will be produced at the
 #'     end of Rout-file if the user don't have writing access at working
