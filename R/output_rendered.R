@@ -1,114 +1,109 @@
-#' @title Attach and if necessary install packages within `NVIverse`
-#' @description First, `use_NVIverse` checks if the package is installed. If not
-#'     already installed, the package will be installed. Thereafter, the package
-#'     is attached using library.
-#' @details Only packages within the `NVIverse` can be installed.
-#' 
-#' @param pkg A vector with the name of one or more `NVIverse` packages.
-#' @param auth_token To install `NVIconfig` a personal access token is needed. Generate a personal
-#'     access token (PAT) in "https://github.com/settings/tokens" and
-#'     supply to this argument. Defaults to \code{NULL}.
-#' @param dependencies \[\code{logical(1)}\] or \[\code{character}\]\cr
-#' The dependencies to check and eventually install. Can be
-#'     a character vector (selecting from "Depends", "Imports", "LinkingTo",
-#'     "Suggests", or "Enhances"), or a logical vector. `TRUE` is shorthand
-#'     for c("Depends", "Imports", "LinkingTo", "Suggests"). `FALSE` is
-#'     shorthand for no dependencies, i.e. just check this package, not its
-#'     dependencies. \code{NA} is shorthand for c("Depends", "Imports", "LinkingTo")
-#'     and is the default.
-#' @param upgrade \[\code{logical(1)}\] or \[\code{character}\]\cr
-#' Should package dependencies be upgraded? One of "ask", "always", or "never".
-#'     `TRUE` and `FALSE` are also accepted and correspond to "always" and "never"
-#'     respectively. Defaults to `FALSE`.
-#' @param build \[\code{logical(1)}\]\cr
-#' If `TRUE` build the package before installing. Defaults to `TRUE`.
-#' @param build_manual \[\code{logical(1)}\]\cr
-#' If `FALSE`, don't build PDF manual ('--no-manual').
-#'     Defaults to `FALSE`.
-#' @param build_vignettes \[\code{logical(1)}\]\cr
-#' If `FALSE`, don't build package vignettes ("--no-build-vignettes").
-#'     Defaults to `TRUE`.
-#' @param \dots Other arguments to be passed to `install_github`.
-#' 
+#' @title Render an rmarkdown file and output the result file.
+#' @description Render an rmarkdown file, save the result file and eventually
+#'     display the output in the browser or send the output to one or more
+#'     email recipients.
+#' @details The output can only be displayed in a browser or the R studio viewer
+#'     in an interaktive session. If you chose to display the output in the
+#'     R studio viewer, but it is not an R studio session, the output will
+#'     instead be output in the browser.
+#'
+#'     An email with the results file can be sent to one or more recipients.
+#'
+#' @param \dots Arguments to be passed to the rmarkdown document and other
+#'     arguments to be passed to `rmarkdown::render` and `sendmailR::sendmail`.
+#' @param input_Rmd The path to the rmarkdown file.
+#' @param output_file \[\code{character(1)}\]. The name of the output file.
+#' @param output_dir \[\code{character(1)}\]. The directory to save the output file.
+#' @param intermediates_dir \[\code{character(1)}\]. The directory to save
+#'     intermediate files made by rmarkdown::render. Defaults to tempdir().
+#' @param display \[\code{logical(1)} |\code{character(1)}\]. If `FALSE`, don't
+#'     display the results file. Can also be "browser" for the default browser
+#'     or "viewer" for the R studio viewer. Defaults to `FALSE`.
+#' @param email \[\code{logical(1)}\]. Whether an email with the results file
+#'     should be sent or not. Defaults to `FALSE`.
+#' @param from \[\code{character(1)}\]. The email address of the sender.
+#' @param to \[\code{character}\]. The email address' of the recipients.
+#' @param subject \[\code{character(1)}\]. Text in the subject line of the email.
+#'     Defaults to the filename.
+#' @param email_text \[\code{character(1)}\]\. Text to be written in the body of
+#'     the email.
+#'
 #' @export
-#' @examples
-#' use_NVIverse("NVIcheckmate")
-#' use_NVIverse(pkg = c("NVIcheckmate", "NVIdb"))
-#' 
-output_rendered <- function (data,
-                             input_Rmd,
-                             output_file,
-                             output_dir,
-                             intermediates_dir = tempdir(),
-                             display = FALSE, 
-                             email =FALSE, 
-                             from = NULL, 
-                             to = NULL, 
-                             subject = NULL, 
-                             email_text = NULL) {
-  
-  
+#'
+output_rendered <- function(...,
+                            input_Rmd,
+                            output_file,
+                            output_dir,
+                            intermediates_dir = tempdir(),
+                            display = FALSE,
+                            email = FALSE,
+                            from = NULL,
+                            to = NULL,
+                            subject = NULL,
+                            email_text = NULL) {
+
+
   # Remove trailing backslash or slash before testing path
-  filepath <- sub("\\\\{1,2}$|/{1,2}$", "", filepath)
-  
-  # ARGUMENT CHECKING ---- 
+  output_dir <- sub("\\\\{1,2}$|/{1,2}$", "", output_dir)
+
+  # ARGUMENT CHECKING ----
   # Object to store check-results
   checks <- checkmate::makeAssertCollection()
-  
+
   # Perform checks
   # checkmate::assert_file_exists(filename, access = "r")
-  # 
+  #
   # checkmate::assert_character(remove_allowed, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
-  # 
+  #
   # checkmate::assert_character(remove_after, len = 1, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
-  
+
   # Report check-results
   checkmate::reportAssertions(checks)
-  
-  
-  # RENDER DOCUMENT ---- 
+
+
+  # RENDER DOCUMENT ----
   rmarkdown::render(input_Rmd,
                     output_file = output_file,
                     output_dir = output_dir,
                     intermediates_dir = intermediates_dir,
                     envir = new.env(parent = globalenv()),
                     encoding = "UTF-8",
-                    quiet = TRUE)
-  
-  # OUTPUT IN BROWSER ---- 
+                    quiet = TRUE,
+                    ...)
+
+  # OUTPUT IN BROWSER ----
   if (!isFALSE(display) && interactive()) {
     if (display == "viewer") {
       # Test whether running under RStudio
       if (Sys.getenv("RSTUDIO") == "1") {
-        
-      } else {display <- "browser"} 
+        file.copy(from = file.path(output_dir, output_file), to = tempdir(), overwrite = TRUE)
+        rstudioapi::viewer(file.path(tempdir(), output_file))
+      } else {display <- "browser"}
     }
-    
+
     if (display == "browser") {
-      if (isTRUE(checkOS("windows"))) {
-        browseURL(url = normalizePath(file.path(output_dir, output_file),
-                                      winslash = "\\"),
-                  browser = NULL)
+      if (isTRUE(checkmate::checkOS("windows"))) {
+        utils::browseURL(url = normalizePath(file.path(output_dir, output_file),
+                                             winslash = "\\"),
+                         browser = NULL)
       }
     }
   }
-  
-  # SEND FILE AS EMAIL 
-  if (isTRUE(email)) {
-    #needs full path if not in working directory
-    attachmentPathName <- normalizePath(file.path(output_dir, output_file),
-                                        winslash = "\\") 
-    attachmentName <- output_file
-    
-    #key part for attachments, put the body and the mime_part in a list for msg
-    attachmentObject <- mime_part(x = attachmentPathName, name = attachmentName)
-    body <- list(email_text, attachmentObject)
-    
-    sendmail(from = from, 
-             to = to, 
-             subject = subject , 
-             body = body, 
-             control = list(smtpServer = "webmail.vetinst.no"))
-  } 
-} 
 
+  # SEND FILE AS EMAIL
+  if (isTRUE(email)) {
+    # needs full path if not in working directory
+    attachment_pathname <- normalizePath(file.path(output_dir, output_file),
+                                         winslash = "\\")
+    # key part for attachments, put the body and the mime_part in a list for msg
+    attachment_object <- sendmailR::mime_part(x = attachment_pathname, name = output_file)
+    body <- list(email_text, attachment_object)
+
+    sendmailR::sendmail(from = from,
+                        to = to,
+                        subject = subject,
+                        body = body,
+                        control = list(smtpServer = "webmail.vetinst.no"),
+                        ...)
+  }
+}
