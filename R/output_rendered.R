@@ -9,13 +9,14 @@
 #'
 #'     An email with the results file can be sent to one or more recipients.
 #'
-#' @param \dots Arguments to be passed to the rmarkdown document and other
-#'     arguments to be passed to `rmarkdown::render` and `sendmailR::sendmail`.
-#' @param input_Rmd The path to the rmarkdown file.
+#' @param input The path to the rmarkdown document.
 #' @param output_file \[\code{character(1)}\]. The name of the output file.
 #' @param output_dir \[\code{character(1)}\]. The directory to save the output file.
 #' @param intermediates_dir \[\code{character(1)}\]. The directory to save
 #'     intermediate files made by rmarkdown::render. Defaults to tempdir().
+#' @param params \[\code{list}\]. List of parameters to be passed to the rmarkdown
+#'     document. The parameters must have been defined in the YAML-section of the
+#'     rmarkdown document.
 #' @param display \[\code{logical(1)} |\code{character(1)}\]. If `FALSE`, don't
 #'     display the results file. Can also be "browser" for the default browser
 #'     or "viewer" for the R studio viewer. Defaults to `FALSE`.
@@ -27,20 +28,23 @@
 #'     Defaults to the filename.
 #' @param email_text \[\code{character(1)}\]\. Text to be written in the body of
 #'     the email.
+#' @param \dots Other arguments to be passed to `rmarkdown::render` and 
+#'     `sendmailR::sendmail`.
 #'
 #' @export
 #'
-output_rendered <- function(...,
-                            input_Rmd,
+output_rendered <- function(input,
                             output_file,
                             output_dir,
                             intermediates_dir = tempdir(),
+                            params,
                             display = FALSE,
                             email = FALSE,
                             from = NULL,
                             to = NULL,
                             subject = NULL,
-                            email_text = NULL) {
+                            email_text = NULL,
+                            ...) {
 
 
   # Remove trailing backslash or slash before testing path
@@ -62,7 +66,8 @@ output_rendered <- function(...,
 
 
   # RENDER DOCUMENT ----
-  rmarkdown::render(input_Rmd,
+  rmarkdown::render(input = input,
+                    params = params,
                     output_file = output_file,
                     output_dir = output_dir,
                     intermediates_dir = intermediates_dir,
