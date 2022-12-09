@@ -28,7 +28,7 @@
 #'     Defaults to the filename.
 #' @param email_text \[\code{character(1)}\]\. Text to be written in the body of
 #'     the email.
-#' @param \dots Other arguments to be passed to `rmarkdown::render` and 
+#' @param \dots Other arguments to be passed to `rmarkdown::render` and
 #'     `sendmailR::sendmail`.
 #'
 #' @export
@@ -55,12 +55,28 @@ output_rendered <- function(input,
   checks <- checkmate::makeAssertCollection()
 
   # Perform checks
-  # checkmate::assert_file_exists(filename, access = "r")
+  checkmate::assert_file(input, access = "r", add = checks)
+  checkmate::assert_string(output_file, any.missing = FALSE, null.ok = TRUE, add = checks)
+  checkmate::assert_directory(output_dir, access = "r", add = checks)
+  checkmate::assert_directory(intermediates_dir, access = "r", add = checks)
+  checkmate::assert_list(params, add = checks)
+  checkmate::assert(checkmate::check_flag(display),
+                    checkmate::check_choice(display, choices = c("browser", "viewer")),
+                    add = checks)
+  checkmate::assert_flag(email, add = checks)
   #
-  # checkmate::assert_character(remove_allowed, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
-  #
-  # checkmate::assert_character(remove_after, len = 1, min.chars = 1, any.missing = FALSE, null.ok = TRUE, add = checks)
-
+  checkmate::assert_string(from,
+                           min.chars = 5, max.chars = 256,
+                           # pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", ignore.case = TRUE,
+                           any.missing = FALSE, null.ok = TRUE,
+                           add = checks)
+  checkmate::assert_character(to,
+                              min.len = 1, min.chars = 5, max.chars = 256,
+                              # pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", ignore.case = TRUE,
+                              any.missing = FALSE, null.ok = TRUE,
+                              add = checks)
+  checkmate::assert_string(subject, any.missing = FALSE, null.ok = TRUE, add = checks)
+  checkmate::assert_string(email_text, any.missing = FALSE, null.ok = TRUE, add = checks)
   # Report check-results
   checkmate::reportAssertions(checks)
 

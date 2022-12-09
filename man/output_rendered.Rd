@@ -5,24 +5,22 @@
 \title{Render an rmarkdown file and output the result file.}
 \usage{
 output_rendered(
-  ...,
-  input_Rmd,
+  input,
   output_file,
   output_dir,
   intermediates_dir = tempdir(),
+  params,
   display = FALSE,
   email = FALSE,
   from = NULL,
   to = NULL,
   subject = NULL,
-  email_text = NULL
+  email_text = NULL,
+  ...
 )
 }
 \arguments{
-\item{\dots}{Arguments to be passed to the rmarkdown document and other
-arguments to be passed to \code{rmarkdown::render} and \code{sendmailR::sendmail}.}
-
-\item{input_Rmd}{The path to the rmarkdown file.}
+\item{input}{The path to the rmarkdown document.}
 
 \item{output_file}{[\code{character(1)}]. The name of the output file.}
 
@@ -30,6 +28,10 @@ arguments to be passed to \code{rmarkdown::render} and \code{sendmailR::sendmail
 
 \item{intermediates_dir}{[\code{character(1)}]. The directory to save
 intermediate files made by rmarkdown::render. Defaults to tempdir().}
+
+\item{params}{[\code{list}]. List of parameters to be passed to the rmarkdown
+document. The parameters must have been defined in the YAML-section of the
+rmarkdown document.}
 
 \item{display}{[\code{logical(1)} |\code{character(1)}]. If \code{FALSE}, don't
 display the results file. Can also be "browser" for the default browser
@@ -47,6 +49,9 @@ Defaults to the filename.}
 
 \item{email_text}{[\code{character(1)}]\. Text to be written in the body of
 the email.}
+
+\item{\dots}{Other arguments to be passed to \code{rmarkdown::render} and
+\code{sendmailR::sendmail}.}
 }
 \description{
 Render an rmarkdown file, save the result file and eventually
