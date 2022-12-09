@@ -88,7 +88,7 @@ The global variables are put in section in the main script. In this example, the
 ```{r, include = TRUE}
 ## Paths and filenames ----
 # The path to the R scripts.
-script_path <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../rscripts/")
+script_path <- paste0(set_dir_NVI("Hendelser"), "outbreak_123_2022/.../rscripts/")
 
 # Today's date in the format yyyymmdd for use in filenames.
 today <- format(Sys.Date(), "%Y%m%d")
@@ -106,18 +106,17 @@ kommune_fylke <- read_kommune_fylke()
 These scripts are performing the tasks that shall generate the products and reports. Here an example with some of the scripts that usually will be part of preparing an outbreak report. For simplicity, the names of the scripts in the outbreak report have been standardized. 
 ```{r, include = TRUE} 
 #### Create population
-source(paste0(script_path,"source/","prepare_population.R"), encoding = "UTF-8")
+source(paste0(script_path, "source/", "prepare_population.R"), encoding = "UTF-8")
 
 # Creates PJSradata
-source(paste0(script_path,"source/","extract_pjs_data.R"), encoding = "UTF-8")
-source(paste0(script_path,"source/","clean_pjs_data.R"), encoding = "UTF-8")
+source(paste0(script_path, "source/", "extract_pjs_data.R"), encoding = "UTF-8")
+source(paste0(script_path, "source/", "clean_pjs_data.R"), encoding = "UTF-8")
 
 # Creates PJSsakprover
-source(paste0(script_path,"source/","prepare_pjs_sakprover.R"), encoding = "UTF-8")
+source(paste0(script_path, "source/", "prepare_pjs_sakprover.R"), encoding = "UTF-8")
 
 # Creates PJSsaker
-source(paste0(script_path,"source/","prepare_pjs_saker.R"), encoding = "UTF-8")
-
+source(paste0(script_path, "source/", "prepare_pjs_saker.R"), encoding = "UTF-8")
 ``` 
 
 ### Mark the end of the main script
@@ -146,18 +145,18 @@ The setup of the R environment is done comparable to the setup the R environment
 ```{r, include = TRUE} 
 # SET UP R ENVIRONMENT ----
 ## Attach packages
-library(NVIbatch) 
-use_pkg(pkg = c("sendmailR")) 
-use_NVIverse(pkg = c("NVIdb")) 
+library(NVIbatch)
+use_pkg(pkg = c("sendmailR"))
+use_NVIverse(pkg = c("NVIdb"))
 
 ## Global variables
 # Paths and file names
 # The path to the outbreak directory.
-domene <- paste0(set_dir_NVI("Hendelser"),"outbreak_123_2022/.../")
+domene <- paste0(set_dir_NVI("Hendelser"), "outbreak_123_2022/.../")
 
-# The name of the main script without extension. 
-# This will also be the name of the Rout file. 
-batch <- "batch_outbreak" 
+# The name of the main script without extension.
+# This will also be the name of the Rout file.
+batch <- "batch_outbreak"
 
 # Today's date in the format yyyymmdd for use in filenames.
 today <- format(Sys.Date(), "%Y%m%d")
@@ -167,7 +166,7 @@ today <- format(Sys.Date(), "%Y%m%d")
 The Rout file is saved with a new name that includes today's date before the file extension. By convention, the file is saved in the directory "batchlog". 
 ```{r, include = TRUE} 
 # Save the Rout file ----
-file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"), 
+file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"),
           to = paste0(domene, "batchlog/", batch, " ", today, ".Rout"))
 ``` 
 
@@ -175,9 +174,9 @@ file.copy(from = paste0(domene, "rscripts/", batch, ".Rout"),
 The function `gather_messages` is used to gather error and warning messages from the log file. The parameter `remove_allowed` accepts a vector of error and warning messages that should not be reacted on. Only parts of the message needs to be written and case is ignored (the check is performed using `grep` and `ignore.case = TRUE`). Default is `remove_allowed = c("was built under R version")`, which removes warning messages due to using packages being built on later R versions than the current running the batch. The parameter `remove_after` accepts a character string with text that marks the end of the Rout file. Any messages after this text will not be reacted upon. Default is `remove_after = "Ferdig Batch"`. Only parts of the message needs to be written and case is ignored. 
 ```{r, include = TRUE} 
 # CHECK LOG FOR ERROR AND WARNING MESSAGES ----
-messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"), 
+messages <- gather_messages(filename = paste0(domene, "Rscripts/", batch, ".Rout"),
                             remove_allowed = c("was built under R version"),
-                            remove_after = "Ferdig Batch") 
+                            remove_after = "Ferdig Batch")
 ``` 
 
 ### Send email with the results of the check
@@ -200,7 +199,7 @@ attachmentObject <- mime_part(x = attachmentPathName, name = attachmentName)
 
 # Include error and warning messages (if any)
 # The subject is customized depending on whether there are error and warning messages or not
-if (length(messages)>0) {
+if (length(messages) > 0) {
   subject <- paste("Feil i", batch)
   body <- list(c("Feilmeldinger", messages), attachmentObject)
 } else {
@@ -212,8 +211,8 @@ if (length(messages)>0) {
 sendmail(from = "<section@domain.no>",
          to = c("<responsible.person@domain.no>"),
          subject = subject,
-         msg = body, 
-         control = list(smtpServer="domain.no"))
+         msg = body,
+         control = list(smtpServer = "domain.no"))
 ``` 
 
 The batch script will send an email when the task has been run at the server. If no email is received when expected, this may indicate that the server is down or the user running the tasks have been logged off. If so, one need to restart the server and/or log on with the user account running the script. 
