@@ -7,7 +7,7 @@
 output_rendered(
   input,
   output_file,
-  output_dir,
+  output_dir = tempdir(),
   intermediates_dir = tempdir(),
   params,
   display = FALSE,
@@ -24,18 +24,19 @@ output_rendered(
 
 \item{output_file}{[\code{character(1)}]. The name of the output file.}
 
-\item{output_dir}{[\code{character(1)}]. The directory to save the output file.}
+\item{output_dir}{[\code{character(1)}]. The directory to save
+the output file. Defaults to \code{NULL}.}
 
 \item{intermediates_dir}{[\code{character(1)}]. The directory to save
 intermediate files made by rmarkdown::render. Defaults to tempdir().}
 
 \item{params}{[\code{list}]. List of parameters to be passed to the rmarkdown
-document. The parameters must have been defined in the YAML-section of the
-rmarkdown document.}
+document.}
 
 \item{display}{[\code{logical(1)} |\code{character(1)}]. If \code{FALSE}, don't
 display the results file. Can also be "browser" for the default browser
-or "viewer" for the R studio viewer. Defaults to \code{FALSE}.}
+or "viewer" for the R studio viewer. \code{TRUE} equals "browser". Defaults
+to \code{FALSE}.}
 
 \item{email}{[\code{logical(1)}]. Whether an email with the results file
 should be sent or not. Defaults to \code{FALSE}.}
@@ -59,11 +60,19 @@ display the output in the browser or send the output to one or more
 email recipients.
 }
 \details{
+The input to the argument \code{params = } should be a list with
+parameters that is used by the rmarkdown document. The parameters must
+have been defined in the YAML-section of the rmarkdown document.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{The default behaviour is to save the resulting html-file in the
+temporary directory. To save the result in a permanent file, use a
+permanent directory as input to \code{output_dir = }.
+
 The output can only be displayed in a browser or the R studio viewer
-in an interaktive session. If you chose to display the output in the
+in an interactive session. If you chose to display the output in the
 R studio viewer, but it is not an R studio session, the output will
 instead be output in the browser.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{An email with the results file can be sent to one or more recipients.
+An email with the results file can be sent to one or more recipients.
 }\if{html}{\out{</div>}}
 }

@@ -2,8 +2,16 @@
 #' @description Render an rmarkdown file, save the result file and eventually
 #'     display the output in the browser or send the output to one or more
 #'     email recipients.
-#' @details The output can only be displayed in a browser or the R studio viewer
-#'     in an interaktive session. If you chose to display the output in the
+#' @details The input to the argument \code{params = } should be a list with
+#'     parameters that is used by the rmarkdown document. The parameters must
+#'     have been defined in the YAML-section of the rmarkdown document.
+#'
+#'     The default behaviour is to save the resulting html-file in the
+#'     temporary directory. To save the result in a permanent file, use a
+#'     permanent directory as input to \code{output_dir = }.
+#'
+#'     The output can only be displayed in a browser or the R studio viewer
+#'     in an interactive session. If you chose to display the output in the
 #'     R studio viewer, but it is not an R studio session, the output will
 #'     instead be output in the browser.
 #'
@@ -11,15 +19,16 @@
 #'
 #' @param input The path to the rmarkdown document.
 #' @param output_file \[\code{character(1)}\]. The name of the output file.
-#' @param output_dir \[\code{character(1)}\]. The directory to save the output file.
+#' @param output_dir \[\code{character(1)}\]. The directory to save
+#'     the output file. Defaults to \code{NULL}.
 #' @param intermediates_dir \[\code{character(1)}\]. The directory to save
 #'     intermediate files made by rmarkdown::render. Defaults to tempdir().
 #' @param params \[\code{list}\]. List of parameters to be passed to the rmarkdown
-#'     document. The parameters must have been defined in the YAML-section of the
-#'     rmarkdown document.
+#'     document.
 #' @param display \[\code{logical(1)} |\code{character(1)}\]. If `FALSE`, don't
 #'     display the results file. Can also be "browser" for the default browser
-#'     or "viewer" for the R studio viewer. Defaults to `FALSE`.
+#'     or "viewer" for the R studio viewer. `TRUE` equals "browser". Defaults
+#'     to `FALSE`.
 #' @param email \[\code{logical(1)}\]. Whether an email with the results file
 #'     should be sent or not. Defaults to `FALSE`.
 #' @param from \[\code{character(1)}\]. The email address of the sender.
@@ -35,7 +44,7 @@
 #'
 output_rendered <- function(input,
                             output_file,
-                            output_dir,
+                            output_dir = tempdir(),
                             intermediates_dir = tempdir(),
                             params,
                             display = FALSE,
@@ -47,6 +56,8 @@ output_rendered <- function(input,
                             ...) {
 
 
+  # PREPARE ARGUMENTS BEFORE CHECKING ----
+  if (isTRUE(display)) {display = "browser"}
   # Remove trailing backslash or slash before testing path
   output_dir <- sub("\\\\{1,2}$|/{1,2}$", "", output_dir)
 
@@ -56,27 +67,29 @@ output_rendered <- function(input,
 
   # Perform checks
   checkmate::assert_file(input, access = "r", add = checks)
-  checkmate::assert_string(output_file, any.missing = FALSE, null.ok = TRUE, add = checks)
+  checkmate::assert_string(output_file, min.chars = 1, add = checks)
   checkmate::assert_directory(output_dir, access = "r", add = checks)
   checkmate::assert_directory(intermediates_dir, access = "r", add = checks)
   checkmate::assert_list(params, add = checks)
-  checkmate::assert(checkmate::check_flag(display),
+  checkmate::assert(checkmate::check_false(display),
                     checkmate::check_choice(display, choices = c("browser", "viewer")),
                     add = checks)
   checkmate::assert_flag(email, add = checks)
   #
-  checkmate::assert_string(from,
-                           min.chars = 5, max.chars = 256,
-                           # pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", ignore.case = TRUE,
-                           any.missing = FALSE, null.ok = TRUE,
-                           add = checks)
-  checkmate::assert_character(to,
-                              min.len = 1, min.chars = 5, max.chars = 256,
-                              # pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", ignore.case = TRUE,
-                              any.missing = FALSE, null.ok = TRUE,
-                              add = checks)
-  checkmate::assert_string(subject, any.missing = FALSE, null.ok = TRUE, add = checks)
-  checkmate::assert_string(email_text, any.missing = FALSE, null.ok = TRUE, add = checks)
+  NVIcheckmate::assert_character(from,
+                                 len = 1, min.chars = 5, max.chars = 256,
+                                 pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
+                                 null.ok = TRUE,
+                                 comment = "The email address is not valid",
+                                 add = checks)
+  NVIcheckmate::assert_character(to,
+                                 min.len = 1, min.chars = 5, max.chars = 256,
+                                 pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
+                                 null.ok = TRUE,
+                                 comment = "One or more email address' are not valid",
+                                 add = checks)
+  checkmate::assert_string(subject, null.ok = TRUE, add = checks)
+  checkmate::assert_string(email_text, null.ok = TRUE, add = checks)
   # Report check-results
   checkmate::reportAssertions(checks)
 
@@ -118,12 +131,16 @@ output_rendered <- function(input,
                                          winslash = "\\")
     # key part for attachments, put the body and the mime_part in a list for msg
     attachment_object <- sendmailR::mime_part(x = attachment_pathname, name = output_file)
-    body <- list(email_text, attachment_object)
+    if (!is.null(email_text)) {
+      body <- list(email_text, attachment_object)
+    } else {
+      body <- list(attachment_object)
+    }
 
     sendmailR::sendmail(from = from,
                         to = to,
                         subject = subject,
-                        body = body,
+                        msg = body,
                         control = list(smtpServer = "webmail.vetinst.no"),
                         ...)
   }
