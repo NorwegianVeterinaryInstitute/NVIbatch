@@ -1,24 +1,9 @@
-NVIbatch 0.3.1.9001 - (2022-##-##)
+NVIbatch 0.4.0 - (2022-12-12)
 ----------------------------------------
 
 New features:
 
 - output_rendered render an rmarkdown document, saves the result file and eventually displays the result file in the browser or send it by email to one or more recipients.
-
-
-Bug fixes:
-
--
-
-
-Other changes:
-
--
-
-
-BREAKING CHANGES:
-
--
 
 
 NVIbatch 0.3.1 - (2022-08-20)
