@@ -50,16 +50,26 @@ gather_messages <- function(filename,
 
   # Identifies lines with error messages
   # Collects the line with error and the two next lines
-  error_lines <- grep("Error", logfile)
+  error_lines <- grep("error", logfile, ignore.case = TRUE)
   error_lines <- c(error_lines, error_lines + 1, error_lines + 2)
 
+  # Collects the line with fatal and the next line
+  # Fatal is used when uploading to shiny server fails
+  fatal_lines <- grep("fatal", logfile, ignore.case = TRUE)
+  fatal_lines <- c(fatal_lines, fatal_lines + 1)
+  
   # Identifies lines with warning messages
   # Collects the line with warning and the next line
   warning_lines <- grep("Warning", logfile)
   warning_lines <- c(warning_lines, warning_lines + 1)
+  
+  # Identifies lines summarising warning messages
+  # Collects the line with summary of warnings
+  summary_warning_lines <- grep("use warnings() to see them", X = logfile, ignore.case = TRUE, fixed = TRUE)
+
 
   # Combines error and warning messages
-  message_lines <- unique(c(error_lines, warning_lines))
+  message_lines <- unique(c(error_lines, fatal_lines, warning_lines, summary_warning_lines))
   message_lines <- message_lines[order(message_lines)]
 
   # Identifies lines with allowed warnings
@@ -95,6 +105,4 @@ gather_messages <- function(filename,
   messages <- paste(message_lines, messages[, 1])
 
   return(messages)
-
-
 }
