@@ -29,6 +29,7 @@ Imports:
     NVIrpackages
 Suggests:
     covr,
+    desc,
     devtools,
     testthat,
     NVIpackager
