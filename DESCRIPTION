@@ -36,9 +36,9 @@ Remotes:
     NorwegianVeterinaryInstitute/NVIcheckmate,
     NorwegianVeterinaryInstitute/NVIrpackages,
     NorwegianVeterinaryInstitute/NVIpackager
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = FALSE)
 VignetteBuilder: knitr
 Language: en-GB
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 3.0.0)
