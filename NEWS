@@ -3,12 +3,14 @@ NVIbatch 0.4.0.9001 - (2023-##-##)
 
 New features:
 
--
+- Created save_log to simplify saving the log and sending an email with status after a batch script has been run.
+
+- Improved collection of warnings and error messages for gather_messages. It now also collects messages with "fatal" that may occur when uploading data to certain services fail.
 
 
 Bug fixes:
 
--
+- 
 
 
 Other changes:
