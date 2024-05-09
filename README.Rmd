@@ -6,13 +6,14 @@ output:
   
 params:
   NVIpkg: "NVIbatch"
+  pkg_path: !r  usethis::proj_path()
   first_copyright_year: "2021"
 ---
 
 ```{r, include = FALSE}
 NVIpkg <- params$NVIpkg
-# NVIpkg <- stringi::stri_extract_last_words(usethis::proj_path())
 NVIpkg_inline <- paste0("`", NVIpkg, "`")
+pkg_path <- params$pkg_path
 
 # If hexagon sticker logo exist, include in README.md
 logo_path <- ""
