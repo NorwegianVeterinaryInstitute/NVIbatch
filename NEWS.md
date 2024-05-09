@@ -1,56 +1,56 @@
 # NVIbatch 0.4.0.9001 - (2023-##-##)
 
-## New features:
+### New features:
 
 - Created `save_log` to simplify saving the log and sending an email with status after a batch script has been run.
 
 - Improved collection of warnings and error messages for `gather_messages`. It now also collects messages marked with "fatal" that may occur when uploading data to certain services fail.
 
 
-## Bug fixes:
+### Bug fixes:
 
 - 
 
 
-## Other changes:
+### Other changes:
 
 -
 
 
-## BREAKING CHANGES:
+### BREAKING CHANGES:
 
 -
 
 
 # NVIbatch 0.4.0 - (2022-12-13)
 
-## New features:
+### New features:
 
 - `output_rendered` render an rmarkdown document, saves the result file and eventually displays the result file in the browser or send it by email to one or more recipients.
 
 
 # NVIbatch 0.3.1 - (2022-08-20)
 
-  Other changes:
+### Other changes:
   
   - Improved argument checking in `use_NVIverse` by implementing `checkmate 2.1.0`.
   
   - Updated documentation including improved README installation guide.
   
   
-  BREAKING CHANGES:
+### BREAKING CHANGES:
   
   - In `use_NVIverse` the default input for `build_manual` were changed to `build_manual = FALSE` to avoid problems that may occur if the pdf-file cannot be generated. 
 
 
 # NVIbatch 0.3.0 - (2022-06-08)
 
-  New features:
+### New features:
   
   - For `gather_messages` case is ignored for the arguments `remove_allowed =` and `remove_after =`. 
   
 
-  Other changes:
+### Other changes:
 
   - Created the vignette: "Run R-scripts automatically". Thanks to Johan Åkerstedt for reviewing the draft of the vignette.
   
@@ -59,7 +59,7 @@
 
 # NVIbatch 0.2.4 - (2022-01-20)
 
-  Bug fixes:
+### Bug fixes:
 
   - Fixed problems with package dependencies during installation.
 
@@ -80,7 +80,7 @@
 
 # NVIbatch 0.2.1 - (2021-09-28)
 
-  Bug fixes:
+### Bug fixes:
 
   - `use_pkg` does not accept `repos` = `NULL` as input.
 
@@ -89,14 +89,14 @@
 
 # NVIbatch 0.2.0 - (2021-09-07)
 
-  New features:
+### New features:
 
   - `use_NVIverse` will attach and if necessary install a package within NVIverse. Accepts a vector of package names.
 
   - `use_pkg` now accepts a character vector with package names as input.
 
 
-  Other changes:
+### Other changes:
 
   - Vignette for "Contributing to NVIbatch".
 
@@ -105,19 +105,19 @@
 
 # NVIbatch 0.1.1 - (2021-05-20)
 
-  Bug fixes:
+### Bug fixes:
 
   - `gather_messages` now accepts `NULL` for `remove_allowed` and `remove_after`.
 
 
-  BREAKING CHANGES:
+### BREAKING CHANGES:
 
   - renamed to `use_pkg` to avoid conflict with `usethis::use_package`.
 
 
 # NVIbatch 0.1.0 - (2021-05-19)
 
-  First release:
+### First release:
 
   - `use_package` Attach and if necessary install a package. The package needs to be available at Cran to be installed.
 
