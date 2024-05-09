@@ -1,7 +1,8 @@
-#' @title Report log after running main scripts
+#' @title Save and report log for scripts
 #' @description Reads the log file, identifies error messages and
 #'     sends an email with the status for running the main script.
-#' @author Johan Åkerstedt Johan.Akerstedt@@vetinst.no
+#'     The log file can be saved with the current date last in 
+#'     file name. 
 #' @author Petter Hopp Petter.Hopp@@vetinst.no
 #' 
 
@@ -19,51 +20,69 @@ main_script <- "main_create_animal_populations"  # navnet på scriptet som det s
 main_script_Rout <- paste0(main_script, ".Rout")
 
 ## The path to the R-scripts
-# Current script file (location path) and whether it runs on the server (TRUE/FALSE)
-# After running this everything can be sourced from additional R scripts
-# if (getwd() == "C:/WINDOWS/system32") {
 script_path <- file.path(domain, "GitHub", repository)
-#   # NVIoutbreak <- paste0(set_dir_NVI("NVIverse"), "/NVIoutbreak/source/")
-#   # running_on_server <- TRUE
-# } else {  
-#   script_path <- getwd()
-#   # NVIoutbreak <- paste0(dirname(getwd()),"/NVIoutbreak/source/")
-#   # running_on_server <- FALSE
-# }
-
-# Today's date in the format yyyymmdd for use in file names
-today <- format(Sys.Date(),"%Y%m%d")
 
 # Specific input to functions in script 
 # email addresses
-from <- "<epi@vetinst.no>"
-to <- c("<petter.hopp@vetinst.no>", "<johan.akerstedt@vetinst.no>")
+from_email <- "<epi@vetinst.no>"
+to_email <- c("<petter.hopp@vetinst.no>", "<johan.akerstedt@vetinst.no>")
+to_email <- c("<petter.hopp@vetinst.no>")
 
-# SAVE LOG FILE ----
-# Copy log-file renamed with date, to track history
-file.copy(from = file.path(script_path, main_script_Rout), 
-          to = file.path(domain, "Batchlog", paste0(main_script, "_", today, ".Rout")))
-
-# COMPOSE EMAIL ----
-# Message text and attachment
-# https://stackoverflow.com/questions/2885660/how-to-send-email-with-attachment-from-r-in-windows
-# key part for attachments, put the body and the mime_part in a list for msg
-attachment_object <- mime_part(x = file.path(script_path, main_script_Rout), 
-                               name = main_script_Rout)
-
-# Include error and warning messages if any
-messages <- gather_messages(filename = file.path(script_path, main_script_Rout))
-if (length(messages)>0) {
-  subject <- paste("Error when running:", main_script)
-  body <- list(c("Error messages", messages), attachment_object)
-} else {
-  subject <- paste("Status for running:", main_script)
-  body <- list(attachment_object)
+save_log <- function(log_file = main_script_Rout,
+                     log_path = script_path,
+                     save = TRUE,
+                     archive = script_path, #file.path(domain, "batchlog"),
+                     email = TRUE,
+                     from = from_email,
+                     to = to_email,
+                     additional_info = NULL,
+                     smtp_server = "webmail.vetinst.no",
+                     ...) {
+  
+  ## ARGUMENT TESTING
+  
+  ## SAVE LOG FILE IN ARCHIVE ----
+  if (isTRUE(save)) {
+    # Copy log-file renamed with date, to track history
+    log_ext <- ""
+    if (grepl(".", log_file, fixed = TRUE)) {
+      log_ext <- tail(unlist(strsplit(x = log_file, split = ".", fixed = TRUE)), n = 1)
+      log_file_crude <- sub(paste0(".", log_ext, "$"), "", log_file)
+    }
+    file.copy(from = file.path(log_dir, log_file), 
+              to = file.path(archive_dir, paste0(log_file_crude, "_", format(Sys.Date(), "%Y%m%d"), ".Rout")),
+              copy.date = TRUE)
+  }
+  
+  
+  # COMPOSE EMAIL ----
+  if (isTRUE(email)) {
+    # Message text and attachment
+    # https://stackoverflow.com/questions/2885660/how-to-send-email-with-attachment-from-r-in-windows
+    # key part for attachments, put the body and the mime_part in a list for msg
+    attachment_object <- mime_part(x = file.path(log_dir, log_file), 
+                                   name = log_file)
+    
+    # Include error and warning messages if any
+    messages <- gather_messages(filename = file.path(log_dir, log_file))
+    if (length(messages)>0) {
+      subject <- paste("Error when running:", log_file_crude)
+      body <- list(c("Error messages", messages), attachment_object)
+    } else {
+      subject <- paste("Status for running:", log_file_crude)
+      body <- list(attachment_object)
+    }
+    
+    # INCLUDE ADDITIONAL INFORMATION ----
+    if (!is.null(additional_info)) {
+      append(body, additional_info, after = 0)
+    }
+    
+    # SEND EMAIL ----
+    sendmail(from = from,
+             to = to,
+             subject = subject,
+             msg = body, 
+             control = list(smtpServer = smtp_server))
+  }
 }
-
-# SEND EMAIL ----
-sendmail(from = from,
-         to = to,
-         subject = subject,
-         msg = body, 
-         control = list(smtpServer="webmail.vetinst.no"))
