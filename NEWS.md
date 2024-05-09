@@ -1,53 +1,49 @@
-NVIbatch 0.4.0.9001 - (2023-##-##)
-----------------------------------------
+# NVIbatch 0.4.0.9001 - (2023-##-##)
 
-New features:
+## New features:
 
-- Created save_log to simplify saving the log and sending an email with status after a batch script has been run.
+- Created `save_log` to simplify saving the log and sending an email with status after a batch script has been run.
 
-- Improved collection of warnings and error messages for gather_messages. It now also collects messages with "fatal" that may occur when uploading data to certain services fail.
+- Improved collection of warnings and error messages for `gather_messages`. It now also collects messages marked with "fatal" that may occur when uploading data to certain services fail.
 
 
-Bug fixes:
+## Bug fixes:
 
 - 
 
 
-Other changes:
+## Other changes:
 
 -
 
 
-BREAKING CHANGES:
+## BREAKING CHANGES:
 
 -
 
 
-NVIbatch 0.4.0 - (2022-12-13)
-----------------------------------------
+# NVIbatch 0.4.0 - (2022-12-13)
 
-New features:
+## New features:
 
 - `output_rendered` render an rmarkdown document, saves the result file and eventually displays the result file in the browser or send it by email to one or more recipients.
 
 
-NVIbatch 0.3.1 - (2022-08-20)
-----------------------------
+# NVIbatch 0.3.1 - (2022-08-20)
 
   Other changes:
   
-  - Improved argument checking in `use_NVIverse` by implementing checkmate 2.1.0
+  - Improved argument checking in `use_NVIverse` by implementing `checkmate 2.1.0`.
   
   - Updated documentation including improved README installation guide.
   
   
   BREAKING CHANGES:
   
-  - In `use_NVIverse` the default input for build_manual were changed to build_manual = FALSE to avoid problems that may occur if the pdf-file cannot be generated. 
+  - In `use_NVIverse` the default input for `build_manual` were changed to `build_manual = FALSE` to avoid problems that may occur if the pdf-file cannot be generated. 
 
 
-NVIbatch 0.3.0 - (2022-06-08)
-----------------------------
+# NVIbatch 0.3.0 - (2022-06-08)
 
   New features:
   
@@ -61,32 +57,28 @@ NVIbatch 0.3.0 - (2022-06-08)
   - updated README
 
 
-NVIbatch 0.2.4 - (2022-01-20)
-----------------------------
+# NVIbatch 0.2.4 - (2022-01-20)
 
   Bug fixes:
 
   - Fixed problems with package dependencies during installation.
 
 
-NVIbatch 0.2.3 - (2021-11-30)
-----------------------------
+# NVIbatch 0.2.3 - (2021-11-30)
 
   Bug fixes:
 
   - `use_NVIverse` now installs missing NVIpackages if argument to `aut_token` is missing.
 
 
-NVIbatch 0.2.2 - (2021-10-01)
-----------------------------
+# NVIbatch 0.2.2 - (2021-10-01)
 
   Other changes:
 
   - Corrected installation instruction in README.
 
 
-NVIbatch 0.2.1 - (2021-09-28)
-----------------------------
+# NVIbatch 0.2.1 - (2021-09-28)
 
   Bug fixes:
 
@@ -95,8 +87,7 @@ NVIbatch 0.2.1 - (2021-09-28)
   - Solved problems with installation.
 
 
-NVIbatch 0.2.0 - (2021-09-07)
-----------------------------
+# NVIbatch 0.2.0 - (2021-09-07)
 
   New features:
 
@@ -112,8 +103,7 @@ NVIbatch 0.2.0 - (2021-09-07)
   - Improved argument checking.
 
 
-NVIbatch 0.1.1 - (2021-05-20)
-----------------------------
+# NVIbatch 0.1.1 - (2021-05-20)
 
   Bug fixes:
 
@@ -125,8 +115,7 @@ NVIbatch 0.1.1 - (2021-05-20)
   - renamed to `use_pkg` to avoid conflict with `usethis::use_package`.
 
 
-NVIbatch 0.1.0 - (2021-05-19)
-----------------------------
+# NVIbatch 0.1.0 - (2021-05-19)
 
   First release:
 
