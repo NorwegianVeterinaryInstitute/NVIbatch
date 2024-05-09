@@ -60,12 +60,12 @@ gather_messages <- function(filename,
 
   # Identifies lines with warning messages
   # Collects the line with warning and the next line
-  warning_lines <- grep("Warning", x = logfile)
+  warning_lines <- grep("warning", x = logfile, ignore.case = TRUE)
   warning_lines <- c(warning_lines, warning_lines + 1)
 
   # Identifies lines summarising warning messages
   # Collects the line with summary of warnings
-  summary_warning_lines <- grep("use warnings() to see them", x = logfile, ignore.case = TRUE, fixed = TRUE)
+  summary_warning_lines <- grep("use warnings\\() to see them", x = logfile, ignore.case = TRUE)
 
 
   # Combines error and warning messages
