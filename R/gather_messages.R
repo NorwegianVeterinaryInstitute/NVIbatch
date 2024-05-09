@@ -7,23 +7,32 @@
 #'     default warnings including the string "was built under R version" will be
 #'     removed. These warnings indicate that the package was built for a later
 #'     R-version than the version used to run the R-script.
-#'
 #' \code{remove_after} is used to remove all messages after a predefined
 #'     tag. The tag can be set using print() in the R-script producing the
 #'     Rout-file. This may be useful as error messages will be produced at the
 #'     end of Rout-file if the user don't have writing access at working
 #'     directory from which R-script is run.
 #'
-#' @param filename The name of the Rout-file.
-#' @param remove_allowed character vector, case is ignored.
-#' @param remove_after character string, case is ignored. Removes all messages
-#'     after a predefined tag, see details. The tag can be set using print() in
-#'     the R-script producing the Rout-file. This may be useful as error messages
-#'     will be produced at the end of Rout-file if the user don't have writing
-#'     access at the server running the R-script.
-#' @export
+#' @param filename [\code{character(1)}]\cr
+#'     The name of the Rout-file.
+#' @param remove_allowed [\code{character}]\cr
+#'     Warning text that is allowed, case is ignored. Defaults to
+#'     c("was built under R version").
+#' @param remove_after [\code{character}]\cr
+#'     Removes all messages after a predefined tag, case is ignored.
+#'     See details. Defaults to "Ferdig Batch".
 #'
-
+#' @return Vector with error and warning messages that was written in the log.
+#'
+#' @author Petter Hopp Petter.Hopp@@vetinst.no
+#' @export
+#' @examples
+#' \dontrun{
+#' # Gather messages from the log file "script.Rout".
+#' library(NVIbatch)
+#' messages <- gather_messages(filename = file.path(getwd(), "script.Rout"),
+#'                               remove_after = "Finished script")
+#' }
 gather_messages <- function(filename,
                             remove_allowed = c("was built under R version"),
                             remove_after = "Ferdig Batch") {
