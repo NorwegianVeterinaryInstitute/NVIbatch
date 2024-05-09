@@ -20,59 +20,73 @@ output_rendered(
 )
 }
 \arguments{
-\item{input}{The path to the rmarkdown document.}
+\item{input}{[\code{character(1)}]\cr
+The path to the rmarkdown document.}
 
-\item{output_file}{[\code{character(1)}]. The name of the output file.}
+\item{output_file}{[\code{character(1)}]\cr
+The name of the output file.}
 
-\item{output_dir}{[\code{character(1)}]. The directory to save
-the output file. Defaults to \code{NULL}.}
+\item{output_dir}{[\code{character(1)}]\cr
+The directory to save the output file. Defaults to \code{tempdir()}.}
 
-\item{intermediates_dir}{[\code{character(1)}]. The directory to save
-intermediate files made by rmarkdown::render. Defaults to tempdir().}
+\item{intermediates_dir}{[\code{character(1)}]\cr
+The directory to save intermediate files made by
+\ifelse{html}{\code{\link[rmarkdown:render]{rmarkdown::render}}}{\code{rmarkdown::render}}.
+Defaults to \code{tempdir()}.}
 
-\item{params}{[\code{list}]. List of parameters to be passed to the rmarkdown
-document.}
+\item{params}{[\code{list}]\cr
+List of parameters to be passed to the rmarkdown document.}
 
-\item{display}{[\code{logical(1)} |\code{character(1)}]. If \code{FALSE}, don't
-display the results file. Can also be "browser" for the default browser
-or "viewer" for the R studio viewer. \code{TRUE} equals "browser". Defaults
-to \code{FALSE}.}
+\item{display}{[\code{logical(1) | character(1)}]\cr
+If \code{FALSE}, don't display the results file. Can also be
+\code{"browser"} for the default browser or \code{"viewer"} for the R studio
+viewer. \code{TRUE} equals \code{"browser"}. Defaults to \code{FALSE}.}
 
-\item{email}{[\code{logical(1)}]. Whether an email with the results file
-should be sent or not. Defaults to \code{FALSE}.}
+\item{email}{[\code{logical(1)}]\cr
+Whether an email with the results file should be sent or not.
+Defaults to \code{FALSE}.}
 
-\item{from}{[\code{character(1)}]. The email address of the sender.}
+\item{from}{[\code{character(1)}]\cr
+The email address of the sender. Defaults to \code{NULL}.}
 
-\item{to}{[\code{character}]. The email address' of the recipients.}
+\item{to}{[\code{character}]\cr
+The email address' of the recipients. Defaults to \code{NULL}.}
 
-\item{subject}{[\code{character(1)}]. Text in the subject line of the email.
-Defaults to the filename.}
+\item{subject}{[\code{character(1)}]\cr
+Text in the subject line of the email. Defaults to \code{NULL}.}
 
-\item{email_text}{[\code{character(1)}]\. Text to be written in the body of
-the email.}
+\item{email_text}{[\code{character(1)}]\cr
+Text to be written in the body of the email. Defaults to \code{NULL}.}
 
-\item{\dots}{Other arguments to be passed to \code{rmarkdown::render} and
-\code{sendmailR::sendmail}.}
+\item{\dots}{Other arguments to be passed to
+\ifelse{html}{\code{\link[rmarkdown:render]{rmarkdown::render}}}{\code{rmarkdown::render}} and
+\ifelse{html}{\code{\link[sendmailR:sendmail]{sendmailR::sendmail}}}{\code{sendmailR::sendmail}}.}
+}
+\value{
+None. Render a rmarkdown file and either saves, emails
+    or displays it in the browser.
 }
 \description{
 Render an rmarkdown file, save the result file and eventually
-display the output in the browser or send the output to one or more
-email recipients.
+    display the output in the browser or send the output to one or more
+    email recipients.
 }
 \details{
-The input to the argument \code{params = } should be a list with
-parameters that is used by the rmarkdown document. The parameters must
-have been defined in the YAML-section of the rmarkdown document.
+The input to the argument \code{params} should be a list with
+    parameters that is used by the rmarkdown document. The parameters must
+    have been defined in the YAML-section of the rmarkdown document.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{The default behaviour is to save the resulting html-file in the
-temporary directory. To save the result in a permanent file, use a
-permanent directory as input to \code{output_dir = }.
+    The default behaviour is to save the resulting html-file in the
+    temporary directory. To save the result in a permanent file, use a
+    permanent directory as input to \code{output_dir}.
 
-The output can only be displayed in a browser or the R studio viewer
-in an interactive session. If you chose to display the output in the
-R studio viewer, but it is not an R studio session, the output will
-instead be output in the browser.
+    The output can only be displayed in a browser or the R studio viewer
+    in an interactive session. If you chose to display the output in the
+    R studio viewer, but it is not an R studio session, the output will
+    instead be output in the browser.
 
-An email with the results file can be sent to one or more recipients.
-}\if{html}{\out{</div>}}
+    An email with the results file can be sent to one or more recipients.
+}
+\author{
+Petter Hopp Petter.Hopp@vetinst.no
 }
