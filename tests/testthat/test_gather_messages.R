@@ -59,7 +59,8 @@ test_that("remove cleared warnings from gather messages in main_script.Rout", {
                c("1 Warning message:","2 Be aware of mistakes"))
   
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"),
-                              remove_allowed = c("was built under R version 3.1.1"))
+                              remove_allowed = c("was built under R version 3.0.1",
+                                                 "was built under R version 3.1.0"))
   expect_equal(messages,
                c("1 Warning message:", "2 Be aware of mistakes",
                  "4 Warning message:", "5 package ‘testthat’ was built under R version 4.3.2"))
