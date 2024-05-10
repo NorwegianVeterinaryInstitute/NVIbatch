@@ -81,7 +81,7 @@ save_log <- function(log_file,
                                    comment = "One or more email address' are not valid",
                                    add = checks)
     ## additional_info
-    checkmate::assert_string(additional_info, len = 1, min.chars = 1, null.ok = TRUE, add = checks)
+    checkmate::assert_string(additional_info, min.chars = 1, null.ok = TRUE, add = checks)
     ## smtp_server
     checkmate::assert_string(smtp_server, min.chars = 5, max.chars = 256,
                              # pattern = "^[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
