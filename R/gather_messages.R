@@ -82,7 +82,7 @@ gather_messages <- function(filename,
   message_lines <- message_lines[order(message_lines)]
 
   # Identifies lines with allowed warnings
-  if (!is.null(remove_allowed) && trimws(remove_allowed) != "") {
+  if (!is.null(remove_allowed) && all(trimws(remove_allowed) != "")) {
     for (i in 1:length(remove_allowed)) {
       allowed <- grep(pattern = remove_allowed[i], x = logfile, ignore.case = TRUE)
       if (i == 1) {
