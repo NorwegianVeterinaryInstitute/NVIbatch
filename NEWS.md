@@ -14,7 +14,7 @@
 
 ### Other changes:
 
-- Improved and standardised help for the functions.
+- Improved and standardised help for all functions.
 
 
 ### BREAKING CHANGES:
