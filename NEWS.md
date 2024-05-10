@@ -9,7 +9,7 @@
 
 ### Bug fixes:
 
-- 
+- `gather_messages` now accepts input to `remove_allowed` with length larger than 1.
 
 
 ### Other changes:
