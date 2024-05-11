@@ -55,9 +55,14 @@ use_NVIverse <- function(pkg,
 
   # Perform checks
   # pkg
-  checkmate::assert_subset(pkg,
-                           choices = NVIrpackages::NVIpackages$Package,
-                           add = checks)
+  # checkmate::assert_subset(pkg,
+  #                          choices = NVIrpackages::NVIpackages$Package,
+  #                          add = checks)
+  NVIcheckmate::assert_character(pkg,
+                                 min.len = 1, min.chars = 3, 
+                                 pattern = "^NVI.*|^OK.*",
+                                 comment = "NVIverse package names start with 'NVI' or 'OK'",
+                                 add = checks)
   # auth_token
   if ("NVIconfig" %in% pkg & !nchar(system.file(package = "NVIconfig"))) {
     if (NVIcheckmate_installed) {
