@@ -1,4 +1,4 @@
-# NVIbatch 0.4.0.9001 - (2023-##-##)
+# NVIbatch 0.5.0 - (2024-05-11)
 
 ### New features:
 
@@ -15,11 +15,6 @@
 ### Other changes:
 
 - Improved and standardised help for all functions.
-
-
-### BREAKING CHANGES:
-
--
 
 
 # NVIbatch 0.4.0 - (2022-12-13)
