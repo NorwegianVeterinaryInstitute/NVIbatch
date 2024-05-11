@@ -76,7 +76,7 @@ test_that("errors for save_log", {
                         from = "xx@xx.no",
                         to = "@xx.no",
                         smtp_server = "mail_server"),
-               regexp = "The email address is not")
+               regexp = "Variable 'to': Must comply to pattern")
   
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
