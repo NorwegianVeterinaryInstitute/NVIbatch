@@ -2,13 +2,13 @@
 #' @description Render an rmarkdown file, save the result file and eventually
 #'     display the output in the browser or send the output to one or more
 #'     email recipients.
-#' @details The input to the argument \code{params = } should be a list with
+#' @details The input to the argument \code{params} should be a list with
 #'     parameters that is used by the rmarkdown document. The parameters must
 #'     have been defined in the YAML-section of the rmarkdown document.
 #'
 #'     The default behaviour is to save the resulting html-file in the
 #'     temporary directory. To save the result in a permanent file, use a
-#'     permanent directory as input to \code{output_dir = }.
+#'     permanent directory as input to \code{output_dir}.
 #'
 #'     The output can only be displayed in a browser or the R studio viewer
 #'     in an interactive session. If you chose to display the output in the
@@ -17,29 +17,41 @@
 #'
 #'     An email with the results file can be sent to one or more recipients.
 #'
-#' @param input The path to the rmarkdown document.
-#' @param output_file \[\code{character(1)}\]. The name of the output file.
-#' @param output_dir \[\code{character(1)}\]. The directory to save
-#'     the output file. Defaults to \code{NULL}.
-#' @param intermediates_dir \[\code{character(1)}\]. The directory to save
-#'     intermediate files made by rmarkdown::render. Defaults to tempdir().
-#' @param params \[\code{list}\]. List of parameters to be passed to the rmarkdown
-#'     document.
-#' @param display \[\code{logical(1)} |\code{character(1)}\]. If `FALSE`, don't
-#'     display the results file. Can also be "browser" for the default browser
-#'     or "viewer" for the R studio viewer. `TRUE` equals "browser". Defaults
-#'     to `FALSE`.
-#' @param email \[\code{logical(1)}\]. Whether an email with the results file
-#'     should be sent or not. Defaults to `FALSE`.
-#' @param from \[\code{character(1)}\]. The email address of the sender.
-#' @param to \[\code{character}\]. The email address' of the recipients.
-#' @param subject \[\code{character(1)}\]. Text in the subject line of the email.
-#'     Defaults to the filename.
-#' @param email_text \[\code{character(1)}\]\. Text to be written in the body of
-#'     the email.
-#' @param \dots Other arguments to be passed to `rmarkdown::render` and
-#'     `sendmailR::sendmail`.
+#' @param input [\code{character(1)}]\cr
+#'     The path to the rmarkdown document.
+#' @param output_file [\code{character(1)}]\cr
+#'     The name of the output file.
+#' @param output_dir [\code{character(1)}]\cr
+#'     The directory to save the output file. Defaults to \code{tempdir()}.
+#' @param intermediates_dir [\code{character(1)}]\cr
+#'     The directory to save intermediate files made by
+#'     \ifelse{html}{\code{\link[rmarkdown:render]{rmarkdown::render}}}{\code{rmarkdown::render}}.
+#'     Defaults to \code{tempdir()}.
+#' @param params [\code{list}]\cr
+#'     List of parameters to be passed to the rmarkdown document.
+#' @param display [\code{logical(1) | character(1)}]\cr
+#'     If \code{FALSE}, don't display the results file. Can also be
+#'     \code{"browser"} for the default browser or \code{"viewer"} for the R studio
+#'     viewer. \code{TRUE} equals \code{"browser"}. Defaults to \code{FALSE}.
+#' @param email [\code{logical(1)}]\cr
+#'     Whether an email with the results file should be sent or not.
+#'     Defaults to \code{FALSE}.
+#' @param from [\code{character(1)}]\cr
+#'     The email address of the sender. Defaults to \code{NULL}.
+#' @param to [\code{character}]\cr
+#'     The email address' of the recipients. Defaults to \code{NULL}.
+#' @param subject [\code{character(1)}]\cr
+#'     Text in the subject line of the email. Defaults to \code{NULL}.
+#' @param email_text [\code{character(1)}]\cr
+#'     Text to be written in the body of the email. Defaults to \code{NULL}.
+#' @param \dots Other arguments to be passed to
+#'     \ifelse{html}{\code{\link[rmarkdown:render]{rmarkdown::render}}}{\code{rmarkdown::render}} and
+#'     \ifelse{html}{\code{\link[sendmailR:sendmail]{sendmailR::sendmail}}}{\code{sendmailR::sendmail}}.
 #'
+#' @return None. Render a rmarkdown file and either saves, emails
+#'     or displays it in the browser.
+#'
+#' @author Petter Hopp Petter.Hopp@@vetinst.no
 #' @export
 #'
 output_rendered <- function(input,

@@ -7,19 +7,23 @@
 use_pkg(pkg, repos = "https://cran.uib.no/", ...)
 }
 \arguments{
-\item{pkg}{A vector with the name of one or more packages.}
+\item{pkg}{[\code{character}]\cr
+Name of one or more packages.}
 
-\item{repos}{character vector, the base URL(s) of the repositories to use,
-e.g., the URL of a Cran mirror such as "https://cloud.r-project.org". Can
-be \code{NULL} to install from local files, directories or URLs: this will be
-inferred by extension from pkgs if of length one.}
+\item{repos}{[\code{character(1)}]\cr
+The base URL(s) of the repositories to use, e.g., the URL of
+a Cran mirror such as "https://cloud.r-project.org". Can be
+\code{NULL} to install from local files, directories or URLs:
+this will be inferred by extension from pkgs if of length one.
+Defaults to "https://cran.uib.no/".}
 
-\item{\dots}{Other arguments to be passed to \code{install.packages}.}
+\item{\dots}{Other arguments to be passed to
+\ifelse{html}{\code{\link[utils:install.packages]{utils::install.packages}}}{\code{utils::install.packages}}.}
 }
 \description{
 First, \code{use_package} checks if the package is installed. If not
-already installed, the package will be installed. Thereafter, the package
-is attached using library.
+    already installed, the package will be installed. Thereafter, the package
+    is attached using library.
 }
 \details{
 Only packages available at Cran can be installed.
@@ -27,4 +31,5 @@ Only packages available at Cran can be installed.
 \examples{
 use_pkg("checkmate")
 use_pkg(pkg = c("checkmate", "devtools"))
+
 }

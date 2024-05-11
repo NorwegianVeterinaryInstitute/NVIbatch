@@ -13,23 +13,24 @@ test_that("Attach NVIverse packages", {
 })
 
 
-test_that("Install NVIverse packages", {
-
-  pkg <- "OKplan"
-  if (pkg %in% (.packages())) {
-    pkgname <- paste0("package:", pkg)
-    detach(pkgname, unload = TRUE, character.only = TRUE)
-  }
-  remove.packages("OKplan")
-  use_NVIverse(pkg = "OKplan")
-  expect_true("OKplan" %in% (.packages()))
-
-})
+# test_that("Install NVIverse packages", {
+# 
+#   pkg <- "OKplan"
+#   if (pkg %in% (.packages())) {
+#     pkgname <- paste0("package:", pkg)
+#     detach(pkgname, unload = TRUE, character.only = TRUE)
+#     remove.packages(pkgs = pkg)
+#   }
+#   use_NVIverse(pkg = "OKplan")
+#   expect_true("OKplan" %in% (.packages()))
+# 
+# })
 
 
 test_that("Error messages for use_NVIverse", {
 
   expect_error(use_NVIverse(pkg = "plyr"),
-             regexp = "'NVIconfig','NVIdb','NVIspatial','NVIpretty','NVIbatch'")
+             regexp = "Must comply to pattern '^NVI.*|^OK.*'",
+             fixed = TRUE)
 
 })

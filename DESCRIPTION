@@ -1,7 +1,7 @@
 Package: NVIbatch
 Title: Tools to facilitate the running of R-scripts in batch mode at NVI
-Version: 0.4.0
-Date: 2022-12-13
+Version: 0.5.0
+Date: 2024-05-11
 Authors@R: 
   c(person(given = "Petter",
            family = "Hopp",
@@ -18,27 +18,27 @@ License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 Imports:
     checkmate (>= 2.1.0),
-    knitr,
     remotes,
     rmarkdown,
     rstudioapi,
     sendmailR,
-    shiny,
     utils,
-    NVIcheckmate (>= 0.5.0),
-    NVIrpackages
+    NVIcheckmate (>= 0.5.0)
 Suggests:
     covr,
+    desc,
     devtools,
+    knitr,
     testthat,
-    NVIpackager
+    NVIpackager,
+    NVIrpackages
 Remotes:
     NorwegianVeterinaryInstitute/NVIcheckmate,
     NorwegianVeterinaryInstitute/NVIrpackages,
     NorwegianVeterinaryInstitute/NVIpackager
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = FALSE)
 VignetteBuilder: knitr
 Language: en-GB
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 3.0.0)

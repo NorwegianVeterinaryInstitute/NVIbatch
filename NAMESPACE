@@ -2,5 +2,6 @@
 
 export(gather_messages)
 export(output_rendered)
+export(save_log)
 export(use_NVIverse)
 export(use_pkg)

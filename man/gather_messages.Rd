@@ -11,31 +11,45 @@ gather_messages(
 )
 }
 \arguments{
-\item{filename}{The name of the Rout-file.}
+\item{filename}{[\code{character(1)}]\cr
+The name of the Rout-file.}
 
-\item{remove_allowed}{character vector, case is ignored.}
+\item{remove_allowed}{[\code{character}]\cr
+Warning text that is allowed, case is ignored. Defaults to
+c("was built under R version").}
 
-\item{remove_after}{character string, case is ignored. Removes all messages
-after a predefined tag, see details. The tag can be set using print() in
-the R-script producing the Rout-file. This may be useful as error messages
-will be produced at the end of Rout-file if the user don't have writing
-access at the server running the R-script.}
+\item{remove_after}{[\code{character}]\cr
+Removes all messages after a predefined tag, case is ignored.
+See details. Defaults to "Ferdig Batch".}
+}
+\value{
+Vector with error and warning messages that was written in the log.
 }
 \description{
 Reads the Rout-file generated when running R in batch mode.
-Identifies lines with error and warning messages and report these. It is
-possible to predefine allowed warnings that shall not be reported.
+    Identifies lines with error and warning messages and report these. It is
+    possible to predefine allowed warnings that shall not be reported.
 }
 \details{
 \code{remove_allowed} is used to remove warnings that is allowed.
-Warnings that include the specified text string(s) will be removed. As
-default warnings including the string "was built under R version" will be
-removed. These warnings indicate that the package was built for a later
-R-version than the version used to run the R-script.
-
+    Warnings that include the specified text string(s) will be removed. As
+    default warnings including the string "was built under R version" will be
+    removed. These warnings indicate that the package was built for a later
+    R-version than the version used to run the R-script.
 \code{remove_after} is used to remove all messages after a predefined
-tag. The tag can be set using print() in the R-script producing the
-Rout-file. This may be useful as error messages will be produced at the
-end of Rout-file if the user don't have writing access at working
-directory from which R-script is run.
+    tag. The tag can be set using print() in the R-script producing the
+    Rout-file. This may be useful as error messages will be produced at the
+    end of Rout-file if the user don't have writing access at working
+    directory from which R-script is run.
+}
+\examples{
+\dontrun{
+# Gather messages from the log file "script.Rout".
+library(NVIbatch)
+messages <- gather_messages(filename = file.path(getwd(), "script.Rout"),
+                              remove_after = "Finished script")
+}
+}
+\author{
+Petter Hopp Petter.Hopp@vetinst.no
 }
