@@ -1,3 +1,25 @@
+# NVIbatch 0.5.0.9000 - (2024-##-##)
+
+## New features:
+
+-
+
+
+## Bug fixes:
+
+-
+
+
+## Other changes:
+
+-
+
+
+## BREAKING CHANGES:
+
+-
+
+
 # NVIbatch 0.5.0 - (2024-05-11)
 
 ### New features:
