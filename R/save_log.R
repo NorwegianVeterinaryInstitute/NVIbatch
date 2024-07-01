@@ -20,11 +20,11 @@
 #'     messages, these are written in the email text.
 #'
 #' It is possible include an short message first in the email text
-#'     by giving it as input to the argument \code{additional_info}. Such
+#'     by giving it as input to the argument \code{include_text}. Such
 #'     a message can give more information of the status of running the
 #'     script. Such a message can be produced by the script and saved.
 #'     Thereafter, the message can be fetched and be used as input to
-#'     \code{additional_info}.
+#'     \code{include_text}.
 #' @param log_file [\code{character(1)}]\cr
 #'     File name of the log file.
 #' @param log_path [\code{character(1)}]\cr
@@ -40,9 +40,12 @@
 #'     The email address of the sender. Defaults to \code{NULL}.
 #' @param to [\code{character}]\cr
 #'     The email address' of the recipients. Defaults to \code{NULL}.
-#' @param additional_info [\code{character(1)}]\cr
-#'     Additional text to be written in the first part of the body of the email.
-#'     Defaults to \code{NULL}.
+#' @param include_text [\code{character(1)}]\cr
+#'     Text to include in the first part of the body of the email. Defaults to 
+#'     \code{NULL}.
+#' @param attach_object [\code{character}]\cr
+#'     Full path and file name of object(s) to attach to the email. Defaults to 
+#'     \code{NULL}.
 #' @param smtp_server [\code{character(1)}]\cr
 #'     The email server that sends the emails. Defaults to \code{NULL}.
 #' @param \dots Other arguments to be passed to \code{\link{gather_messages}} and
@@ -61,7 +64,8 @@ save_log <- function(log_file,
                      email = TRUE,
                      from = NULL,
                      to = NULL,
-                     additional_info = NULL,
+                     include_text = NULL,
+                     attach_object = NULL,
                      smtp_server = NULL,
                      ...) {
 
@@ -88,7 +92,7 @@ save_log <- function(log_file,
   }
   ## email
   checkmate::assert_flag(email, add = checks)
-  ## to & from & additional_info & smtp_server
+  ## to & from & additional info & smtp_server
   if (isTRUE(email)) {
     NVIcheckmate::assert_character(from,
                                    len = 1, min.chars = 5, max.chars = 256,
@@ -100,8 +104,16 @@ save_log <- function(log_file,
                                    pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
                                    comment = "One or more email address' are not valid",
                                    add = checks)
-    ## additional_info
-    checkmate::assert_string(additional_info, min.chars = 1, null.ok = TRUE, add = checks)
+    ## include_text
+    checkmate::assert_string(include_text, min.chars = 1, null.ok = TRUE, add = checks)
+    ## attach_object
+    checkmate::assert_character(attach_object, min.len = 1, min.chars = 1, 
+                                any.missing = FALSE, null.ok = TRUE, add = checks)
+    if (!is.null(attach_object)) {
+      for(object in attach_object) {
+        checkmate::assert_file_exists(object, access = "r", add = checks)
+      }
+    }
     ## smtp_server
     checkmate::assert_string(smtp_server, min.chars = 5, max.chars = 256,
                              # pattern = "^[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
@@ -145,9 +157,18 @@ save_log <- function(log_file,
       body <- list(attachment_object)
     }
 
-    # INCLUDE ADDITIONAL INFORMATION ----
-    if (!is.null(additional_info)) {
-      body <- append(body, additional_info, after = 0)
+    # ATTACH MORE OBJECTS ----
+    if (!is.null(attach_object)) {
+      for(object in attach_object) {
+        filename <- tail(strsplit(normalizePath(pkg_path, winslash = "/"), split = "/")[[1]], 1)
+        attachment_object <- sendmailR::mime_part(x = object, name = filename)
+      body <- append(body, attachment_object)
+      }
+    }
+    
+    # INCLUDE TEXT ----
+    if (!is.null(include_text)) {
+      body <- append(body, include_text, after = 0)
     }
 
     # SEND EMAIL ----
