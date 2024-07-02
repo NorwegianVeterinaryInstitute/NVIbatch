@@ -1,8 +1,8 @@
-# NVIbatch 0.5.0.9000 - (2024-##-##)
+# NVIbatch 0.5.0.9001 - (2024-##-##)
 
 ## New features:
 
--
+- composing emails for `save_log` is improved with more robust generation of body text and possibility of attaching objects.  
 
 
 ## Bug fixes:
@@ -12,12 +12,12 @@
 
 ## Other changes:
 
--
+- 
 
 
 ## BREAKING CHANGES:
 
--
+- argument `addtional_info` in `save_log` is deprecated. It is replaced by argument `include_text`.
 
 
 # NVIbatch 0.5.0 - (2024-05-11)
