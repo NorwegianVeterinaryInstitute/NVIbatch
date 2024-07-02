@@ -67,8 +67,8 @@ Reads the log file, identifies error messages and
 }
 \details{
 The function collects warnings and error messages from
-    log file when a script has been run. This is dependant on that
-    the script has been set up to produce the log file. There
+    log file when a script has been run. The script must be set up
+    to produce the log file. There
     the name and path of the log file will have been given.
 
 The log file will be renamed so that the current date in the

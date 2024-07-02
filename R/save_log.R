@@ -4,8 +4,8 @@
 #'     The log file can be saved with the current date last in
 #'     file name.
 #' @details The function collects warnings and error messages from
-#'     log file when a script has been run. This is dependant on that
-#'     the script has been set up to produce the log file. There
+#'     log file when a script has been run. The script must be set up
+#'     to produce the log file. There
 #'     the name and path of the log file will have been given.
 #'
 #' The log file will be renamed so that the current date in the
@@ -25,6 +25,7 @@
 #'     script. Such a message can be produced by the script and saved.
 #'     Thereafter, the message can be fetched and be used as input to
 #'     \code{include_text}.
+#'
 #' @param log_file [\code{character(1)}]\cr
 #'     File name of the log file.
 #' @param log_path [\code{character(1)}]\cr
@@ -155,37 +156,38 @@ save_log <- function(log_file,
 
   # COMPOSE EMAIL ----
   if (isTRUE(email)) {
-    # Message text and attachment
+    # Subject and body ----
+    # Start body message with include_text
+    body <- ifelse(!is.null(include_text), include_text, "")
+
+    # Include error and warning messages if any
+    dots1 <- intersect(setdiff(names(formals(gather_messages)), c("filename")), names(dots))
+    messages <- do.call(gather_messages,
+                        append(dots[dots1], list(filename = file.path(log_path, log_file))))
+
+    if (length(messages) > 0) {
+      subject <- paste("Error when running:", log_file_crude)
+      # body <- list(c("Error messages", messages), attachment_object)
+      body <- c(body, "", "Error messages", messages)
+    } else {
+      subject <- paste("Status for running:", log_file_crude)
+      # body <- list(attachment_object)
+    }
+
+    # Attachments ----
     # https://stackoverflow.com/questions/2885660/how-to-send-email-with-attachment-from-r-in-windows
     # key part for attachments, put the body and the mime_part in a list for msg
     attachment_object <- sendmailR::mime_part(x = file.path(log_path, log_file),
                                               name = log_file)
+    body <- list(body, attachment_object)
 
-    # Include error and warning messages if any
-    dots1 <- intersect(setdiff(names(formals(gather_messages)), c("filename")), names(dots))
-    # journal_rapp <- do.call(NVIdb::login, append(dots[dots1], list(dbservice = "PJS", dbinterface = "odbc")))
-    messages <- do.call(gather_messages, append(dots[dots1], list(filename = file.path(log_path, log_file))))
-    # messages <- gather_messages(filename = file.path(log_path, log_file), ...)
-    if (length(messages) > 0) {
-      subject <- paste("Error when running:", log_file_crude)
-      body <- list(c("Error messages", messages), attachment_object)
-    } else {
-      subject <- paste("Status for running:", log_file_crude)
-      body <- list(attachment_object)
-    }
-
-    # ATTACH MORE OBJECTS ----
+    # Attach more objects
     if (!is.null(attach_object)) {
       for (object in attach_object) {
         filename <- utils::tail(strsplit(normalizePath(object, winslash = "/"), split = "/")[[1]], 1)
         attachment_object <- sendmailR::mime_part(x = object, name = filename)
         body <- append(body, attachment_object)
       }
-    }
-
-    # INCLUDE TEXT ----
-    if (!is.null(include_text)) {
-      body <- append(body, include_text, after = 0)
     }
 
     # SEND EMAIL ----
@@ -198,11 +200,5 @@ save_log <- function(log_file,
                                              subject = subject,
                                              msg = body,
                                              control = list(smtpServer = smtp_server))))
-    # sendmailR::sendmail(from = from,
-    #                     to = to,
-    #                     subject = subject,
-    #                     msg = body,
-    #                     control = list(smtpServer = smtp_server),
-    #                     ...)
   }
 }
