@@ -13,7 +13,7 @@ writeLines(text = c("Warning message:",
            con = file.path(td, "main_script.Rout"))
 messages <- gather_messages(filename = file.path(td, "main_script.Rout"))
 expect_equal(messages,
-             c("1 Warning message:","2 Be aware of mistakes"))
+             c("1 Warning message:", "2 Be aware of mistakes"))
 
   # Create log file to check
 writeLines(text = c("error:",
@@ -24,7 +24,7 @@ writeLines(text = c("error:",
            con = file.path(td, "main_script.Rout"))
 messages <- gather_messages(filename = file.path(td, "main_script.Rout"))
 expect_equal(messages,
-             c("1 error:","2 Be aware of mistakes", "3 xxx"))
+             c("1 error:", "2 Be aware of mistakes", "3 xxx"))
 
   # Create log file to check
 writeLines(text = c("FATAL:",
@@ -35,7 +35,7 @@ writeLines(text = c("FATAL:",
            con = file.path(td, "main_script.Rout"))
 messages <- gather_messages(filename = file.path(td, "main_script.Rout"))
 expect_equal(messages,
-             c("1 FATAL:","2 Be aware of mistakes"))
+             c("1 FATAL:", "2 Be aware of mistakes"))
 
 })
 
@@ -51,20 +51,20 @@ test_that("remove cleared warnings from gather messages in main_script.Rout", {
              con = file.path(td, "main_script.Rout"))
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"))
   expect_equal(messages,
-               c("1 Warning message:","2 Be aware of mistakes"))
-  
+               c("1 Warning message:", "2 Be aware of mistakes"))
+
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"),
                               remove_allowed = c("was built under R version"))
   expect_equal(messages,
-               c("1 Warning message:","2 Be aware of mistakes"))
-  
+               c("1 Warning message:", "2 Be aware of mistakes"))
+
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"),
                               remove_allowed = c("was built under R version 3.0.1",
                                                  "was built under R version 3.1.0"))
   expect_equal(messages,
                c("1 Warning message:", "2 Be aware of mistakes",
                  "4 Warning message:", "5 package ‘testthat’ was built under R version 4.3.2"))
-  
+
 })
 
 test_that("remove warnings late in main_script.Rout", {
@@ -79,19 +79,19 @@ test_that("remove warnings late in main_script.Rout", {
              con = file.path(td, "main_script.Rout"))
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"))
   expect_equal(messages,
-               c("1 Warning message:","2 Be aware of mistakes"))
-  
+               c("1 Warning message:", "2 Be aware of mistakes"))
+
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"),
                               remove_after = c("Ferdig Batch"))
   expect_equal(messages,
-               c("1 Warning message:","2 Be aware of mistakes"))
-  
+               c("1 Warning message:", "2 Be aware of mistakes"))
+
   messages <- gather_messages(filename = file.path(td, "main_script.Rout"),
                               remove_after = c("Finished Batch"))
    expect_equal(messages,
                c("1 Warning message:", "2 Be aware of mistakes",
                  "6 Warning message:", "7 Late mistake"))
-  
+
 })
 
 
@@ -106,15 +106,14 @@ test_that("errors for gather_messages", {
   expect_error(gather_messages(filename = file.path(td, "main_script.Rout"),
                                remove_allowed = NA),
                regexp = "Variable 'remove_allowed': Contains missing values")
-  
+
   expect_error(gather_messages(filename = file.path(td, "main_script.Rout"),
                                remove_after = NA),
                regexp = "Variable 'remove_after': Contains missing values")
-  
+
   expect_error(gather_messages(filename = file.path(td, "main_script.Rout"),
                                remove_after = c("x", "y", "z")),
                regexp = "Variable 'remove_after': Must have length 1, but has length 3")
-  
+
  options(width = unlist(linewidth))
 })
-
