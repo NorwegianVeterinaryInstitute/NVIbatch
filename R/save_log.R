@@ -69,17 +69,20 @@ save_log <- function(log_file,
                      smtp_server = NULL,
                      ...) {
 
-
   # PREPARE ARGUMENTS BEFORE CHECKING ----
   # Remove trailing backslash or slash before testing path
   log_path <- sub("\\\\{1,2}$|/{1,2}$", "", log_path)
   archive <- sub("\\\\{1,2}$|/{1,2}$", "", archive)
 
+  # CAPTURE DOTS ----
+  # Used below to ensure correct arguments for nested functions
+  #   and check for deprecated arguments
+  dots <- list(...)
+
   # CHECK FOR DEPRECATED ARGUMENTS ----
-  # Remember to remove utils::globalVariables("additional_info") when this is removed
-  if ("additional_info" %in% names(list(...))) {
+  if (!is.null(dots[[1]]) && "additional_info" %in% names(dots)) {
     if (is.null(include_text)) {
-      include_text <- additional_info
+      include_text <- dots$additional_info
     }
     warning(paste("The argument 'additional_info' is deprecated.",
                   "Use 'include_text' instead.",
@@ -159,7 +162,10 @@ save_log <- function(log_file,
                                               name = log_file)
 
     # Include error and warning messages if any
-    messages <- gather_messages(filename = file.path(log_path, log_file), ...)
+    dots1 <- intersect(setdiff(names(formals(gather_messages)), c("filename")), names(dots))
+    # journal_rapp <- do.call(NVIdb::login, append(dots[dots1], list(dbservice = "PJS", dbinterface = "odbc")))
+    messages <- do.call(gather_messages, append(dots[dots1], list(filename = file.path(log_path, log_file))))
+    # messages <- gather_messages(filename = file.path(log_path, log_file), ...)
     if (length(messages) > 0) {
       subject <- paste("Error when running:", log_file_crude)
       body <- list(c("Error messages", messages), attachment_object)
@@ -183,14 +189,20 @@ save_log <- function(log_file,
     }
 
     # SEND EMAIL ----
-    sendmailR::sendmail(from = from,
-                        to = to,
-                        subject = subject,
-                        msg = body,
-                        control = list(smtpServer = smtp_server),
-                        ...)
+    dots1 <- intersect(setdiff(names(formals(sendmailR::sendmail)),
+                               c("from", "to", "subject", "msg", "control")),
+                       names(dots))
+    do.call(sendmailR::sendmail, append(dots[dots1],
+                                        list(from = from,
+                                             to = to,
+                                             subject = subject,
+                                             msg = body,
+                                             control = list(smtpServer = smtp_server))))
+    # sendmailR::sendmail(from = from,
+    #                     to = to,
+    #                     subject = subject,
+    #                     msg = body,
+    #                     control = list(smtpServer = smtp_server),
+    #                     ...)
   }
 }
-
-# To avoid checking of the variable kommune_fylke as default input argument in the function
-utils::globalVariables("additional_info")
