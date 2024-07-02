@@ -59,7 +59,7 @@ use_NVIverse <- function(pkg,
   #                          choices = NVIrpackages::NVIpackages$Package,
   #                          add = checks)
   NVIcheckmate::assert_character(pkg,
-                                 min.len = 1, min.chars = 3, 
+                                 min.len = 1, min.chars = 3,
                                  pattern = "^NVI.*|^OK.*",
                                  comment = "NVIverse package names start with 'NVI' or 'OK'",
                                  add = checks)

@@ -14,7 +14,7 @@ test_that("Attach NVIverse packages", {
 
 
 # test_that("Install NVIverse packages", {
-# 
+#
 #   pkg <- "OKplan"
 #   if (pkg %in% (.packages())) {
 #     pkgname <- paste0("package:", pkg)
@@ -23,7 +23,7 @@ test_that("Attach NVIverse packages", {
 #   }
 #   use_NVIverse(pkg = "OKplan")
 #   expect_true("OKplan" %in% (.packages()))
-# 
+#
 # })
 
 
