@@ -76,6 +76,7 @@ save_log <- function(log_file,
   archive <- sub("\\\\{1,2}$|/{1,2}$", "", archive)
 
   # CHECK FOR DEPRECATED ARGUMENTS ----
+  # Remember to remove utils::globalVariables("additional_info") when this is removed
   if ("additional_info" %in% names(list(...))) {
     if (is.null(include_text)) {
       include_text <- additional_info
@@ -170,7 +171,7 @@ save_log <- function(log_file,
     # ATTACH MORE OBJECTS ----
     if (!is.null(attach_object)) {
       for (object in attach_object) {
-        filename <- tail(strsplit(normalizePath(pkg_path, winslash = "/"), split = "/")[[1]], 1)
+        filename <- utils::tail(strsplit(normalizePath(object, winslash = "/"), split = "/")[[1]], 1)
         attachment_object <- sendmailR::mime_part(x = object, name = filename)
         body <- append(body, attachment_object)
       }
@@ -190,3 +191,6 @@ save_log <- function(log_file,
                         ...)
   }
 }
+
+# To avoid checking of the variable kommune_fylke as default input argument in the function
+utils::globalVariables("additional_info")
