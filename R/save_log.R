@@ -41,10 +41,10 @@
 #' @param to [\code{character}]\cr
 #'     The email address' of the recipients. Defaults to \code{NULL}.
 #' @param include_text [\code{character(1)}]\cr
-#'     Text to include in the first part of the body of the email. Defaults to 
+#'     Text to include in the first part of the body of the email. Defaults to
 #'     \code{NULL}.
 #' @param attach_object [\code{character}]\cr
-#'     Full path and file name of object(s) to attach to the email. Defaults to 
+#'     Full path and file name of object(s) to attach to the email. Defaults to
 #'     \code{NULL}.
 #' @param smtp_server [\code{character(1)}]\cr
 #'     The email server that sends the emails. Defaults to \code{NULL}.
@@ -74,6 +74,16 @@ save_log <- function(log_file,
   # Remove trailing backslash or slash before testing path
   log_path <- sub("\\\\{1,2}$|/{1,2}$", "", log_path)
   archive <- sub("\\\\{1,2}$|/{1,2}$", "", archive)
+
+  # CHECK FOR DEPRECATED ARGUMENTS ----
+  if ("additional_info" %in% names(list(...))) {
+    if (is.null(include_text)) {
+      include_text <- additional_info
+    }
+    warning(paste("The argument 'additional_info' is deprecated.",
+                  "Use 'include_text' instead.",
+                  "The input to 'additional_info' has been transferred to 'include_text'."))
+  }
 
   # ARGUMENT CHECKING ----
   # Object to store check-results
@@ -107,10 +117,10 @@ save_log <- function(log_file,
     ## include_text
     checkmate::assert_string(include_text, min.chars = 1, null.ok = TRUE, add = checks)
     ## attach_object
-    checkmate::assert_character(attach_object, min.len = 1, min.chars = 1, 
+    checkmate::assert_character(attach_object, min.len = 1, min.chars = 1,
                                 any.missing = FALSE, null.ok = TRUE, add = checks)
     if (!is.null(attach_object)) {
-      for(object in attach_object) {
+      for (object in attach_object) {
         checkmate::assert_file_exists(object, access = "r", add = checks)
       }
     }
@@ -159,13 +169,13 @@ save_log <- function(log_file,
 
     # ATTACH MORE OBJECTS ----
     if (!is.null(attach_object)) {
-      for(object in attach_object) {
+      for (object in attach_object) {
         filename <- tail(strsplit(normalizePath(pkg_path, winslash = "/"), split = "/")[[1]], 1)
         attachment_object <- sendmailR::mime_part(x = object, name = filename)
-      body <- append(body, attachment_object)
+        body <- append(body, attachment_object)
       }
     }
-    
+
     # INCLUDE TEXT ----
     if (!is.null(include_text)) {
       body <- append(body, include_text, after = 0)
