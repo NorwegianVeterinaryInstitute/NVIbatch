@@ -85,7 +85,7 @@ save_log <- function(log_file,
   dots <- list(...)
 
   # CHECK FOR DEPRECATED ARGUMENTS ----
-  if (!is.null(dots[[1]]) && "additional_info" %in% names(dots)) {
+  if (length(dots) > 0 && !is.null(dots[[1]]) && "additional_info" %in% names(dots)) {
     if (is.null(include_text)) {
       include_text <- dots$additional_info
     }
