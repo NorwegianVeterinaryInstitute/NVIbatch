@@ -2,17 +2,12 @@
 
 ## New features:
 
-- composing emails for `save_log` is improved with more robust generation of body text and possibility of attaching objects.  
+- composing emails for `save_log` is improved with more robust generation of body text and possibility of attaching objects. Included the argument `email_subject`.
 
 
 ## Bug fixes:
 
--
-
-
-## Other changes:
-
-- 
+- fixed error in `save_log` when no additional arguments were given.
 
 
 ## BREAKING CHANGES:
