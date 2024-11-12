@@ -12,7 +12,9 @@ save_log(
   email = TRUE,
   from = NULL,
   to = NULL,
-  additional_info = NULL,
+  email_subject = tools::file_path_sans_ext(log_file),
+  include_text = NULL,
+  attach_object = NULL,
   smtp_server = NULL,
   ...
 )
@@ -40,9 +42,17 @@ The email address of the sender. Defaults to \code{NULL}.}
 \item{to}{[\code{character}]\cr
 The email address' of the recipients. Defaults to \code{NULL}.}
 
-\item{additional_info}{[\code{character(1)}]\cr
-Additional text to be written in the first part of the body of the email.
-Defaults to \code{NULL}.}
+\item{email_subject}{[\code{character(1)}]\cr
+Text to include in subject after "Status for running:" or "Error when
+running:". Defaults to `log_file` without file extension.}
+
+\item{include_text}{[\code{character(1)}]\cr
+Text to include in the first part of the body of the email. Defaults to
+\code{NULL}.}
+
+\item{attach_object}{[\code{character}]\cr
+Full path and file name of object(s) to attach to the email. Defaults to
+\code{NULL}.}
 
 \item{smtp_server}{[\code{character(1)}]\cr
 The email server that sends the emails. Defaults to \code{NULL}.}
@@ -62,8 +72,8 @@ Reads the log file, identifies error messages and
 }
 \details{
 The function collects warnings and error messages from
-    log file when a script has been run. This is dependant on that
-    the script has been set up to produce the log file. There
+    log file when a script has been run. The script must be set up
+    to produce the log file. There
     the name and path of the log file will have been given.
 
 The log file will be renamed so that the current date in the
@@ -78,11 +88,11 @@ If an email should report the status, an email is produced. The
     messages, these are written in the email text.
 
 It is possible include an short message first in the email text
-    by giving it as input to the argument \code{additional_info}. Such
+    by giving it as input to the argument \code{include_text}. Such
     a message can give more information of the status of running the
     script. Such a message can be produced by the script and saved.
     Thereafter, the message can be fetched and be used as input to
-    \code{additional_info}.
+    \code{include_text}.
 }
 \author{
 Petter Hopp Petter.Hopp@vetinst.no

@@ -37,69 +37,68 @@ test_that("errors for save_log", {
                         archive = tempdir(),
                         email = FALSE),
                regexp = "Directory 'tempdir' does not exist.")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
-                        archive = "tempdir", 
+                        archive = "tempdir",
                         email = FALSE),
                regexp = "Directory 'tempdir' does not exist.")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = "TRUE",
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = FALSE),
                regexp = "Must be of type 'logical flag'")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = TRUE,
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = "FALSE"),
                regexp = "Must be of type 'logical flag'")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = TRUE,
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = TRUE,
                         from = "@xx.no",
                         to = "xx@xx.no",
                         smtp_server = "mail_server"),
                regexp = "The email address is not")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = TRUE,
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = TRUE,
                         from = "xx@xx.no",
                         to = "@xx.no",
                         smtp_server = "mail_server"),
                regexp = "Variable 'to': Must comply to pattern")
-  
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = TRUE,
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = TRUE,
                         from = "xx@xx.no",
                         to = "xx@xx.no",
-                        additional_info = FALSE,
+                        include_text = FALSE,
                         smtp_server = "mail_server"),
-               regexp = "'additional_info': Must be of type 'string'")
-  
+               regexp = "'include_text': Must be of type 'string'")
+
   expect_error(save_log(log_file = "main_script.Rout",
                         log_path = tempdir(),
                         save = TRUE,
-                        archive = tempdir(), 
+                        archive = tempdir(),
                         email = TRUE,
                         from = "xx@xx.no",
                         to = "xx@xx.no",
-                        additional_info = NULL,
+                        include_text = NULL,
                         smtp_server = NULL),
                regexp = "'smtp_server': Must be of type 'string'")
-  
+
  options(width = unlist(linewidth))
 })
-

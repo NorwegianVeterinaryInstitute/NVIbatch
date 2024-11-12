@@ -1,7 +1,7 @@
 Package: NVIbatch
 Title: Tools to facilitate the running of R-scripts in batch mode at NVI
-Version: 0.5.0
-Date: 2024-05-11
+Version: 0.5.1
+Date: 2024-11-12
 Authors@R: 
   c(person(given = "Petter",
            family = "Hopp",
@@ -22,6 +22,7 @@ Imports:
     rmarkdown,
     rstudioapi,
     sendmailR,
+    tools,
     utils,
     NVIcheckmate (>= 0.5.0)
 Suggests:

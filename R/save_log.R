@@ -4,8 +4,8 @@
 #'     The log file can be saved with the current date last in
 #'     file name.
 #' @details The function collects warnings and error messages from
-#'     log file when a script has been run. This is dependant on that
-#'     the script has been set up to produce the log file. There
+#'     log file when a script has been run. The script must be set up
+#'     to produce the log file. There
 #'     the name and path of the log file will have been given.
 #'
 #' The log file will be renamed so that the current date in the
@@ -20,11 +20,12 @@
 #'     messages, these are written in the email text.
 #'
 #' It is possible include an short message first in the email text
-#'     by giving it as input to the argument \code{additional_info}. Such
+#'     by giving it as input to the argument \code{include_text}. Such
 #'     a message can give more information of the status of running the
 #'     script. Such a message can be produced by the script and saved.
 #'     Thereafter, the message can be fetched and be used as input to
-#'     \code{additional_info}.
+#'     \code{include_text}.
+#'
 #' @param log_file [\code{character(1)}]\cr
 #'     File name of the log file.
 #' @param log_path [\code{character(1)}]\cr
@@ -40,9 +41,15 @@
 #'     The email address of the sender. Defaults to \code{NULL}.
 #' @param to [\code{character}]\cr
 #'     The email address' of the recipients. Defaults to \code{NULL}.
-#' @param additional_info [\code{character(1)}]\cr
-#'     Additional text to be written in the first part of the body of the email.
-#'     Defaults to \code{NULL}.
+#' @param email_subject [\code{character(1)}]\cr
+#'     Text to include in subject after "Status for running:" or "Error when
+#'     running:". Defaults to `log_file` without file extension.
+#' @param include_text [\code{character(1)}]\cr
+#'     Text to include in the first part of the body of the email. Defaults to
+#'     \code{NULL}.
+#' @param attach_object [\code{character}]\cr
+#'     Full path and file name of object(s) to attach to the email. Defaults to
+#'     \code{NULL}.
 #' @param smtp_server [\code{character(1)}]\cr
 #'     The email server that sends the emails. Defaults to \code{NULL}.
 #' @param \dots Other arguments to be passed to \code{\link{gather_messages}} and
@@ -61,15 +68,31 @@ save_log <- function(log_file,
                      email = TRUE,
                      from = NULL,
                      to = NULL,
-                     additional_info = NULL,
+                     email_subject = tools::file_path_sans_ext(log_file),
+                     include_text = NULL,
+                     attach_object = NULL,
                      smtp_server = NULL,
                      ...) {
-
 
   # PREPARE ARGUMENTS BEFORE CHECKING ----
   # Remove trailing backslash or slash before testing path
   log_path <- sub("\\\\{1,2}$|/{1,2}$", "", log_path)
   archive <- sub("\\\\{1,2}$|/{1,2}$", "", archive)
+
+  # CAPTURE DOTS ----
+  # Used below to ensure correct arguments for nested functions
+  #   and check for deprecated arguments
+  dots <- list(...)
+
+  # CHECK FOR DEPRECATED ARGUMENTS ----
+  if (length(dots) > 0 && !is.null(dots[[1]]) && "additional_info" %in% names(dots)) {
+    if (is.null(include_text)) {
+      include_text <- dots$additional_info
+    }
+    warning(paste("The argument 'additional_info' is deprecated.",
+                  "Use 'include_text' instead.",
+                  "The input to 'additional_info' has been transferred to 'include_text'."))
+  }
 
   # ARGUMENT CHECKING ----
   # Object to store check-results
@@ -88,7 +111,7 @@ save_log <- function(log_file,
   }
   ## email
   checkmate::assert_flag(email, add = checks)
-  ## to & from & additional_info & smtp_server
+  ## to & from & additional info & smtp_server
   if (isTRUE(email)) {
     NVIcheckmate::assert_character(from,
                                    len = 1, min.chars = 5, max.chars = 256,
@@ -100,8 +123,16 @@ save_log <- function(log_file,
                                    pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
                                    comment = "One or more email address' are not valid",
                                    add = checks)
-    ## additional_info
-    checkmate::assert_string(additional_info, min.chars = 1, null.ok = TRUE, add = checks)
+    ## include_text
+    checkmate::assert_string(include_text, min.chars = 1, null.ok = TRUE, add = checks)
+    ## attach_object
+    checkmate::assert_character(attach_object, min.len = 1, min.chars = 1,
+                                any.missing = FALSE, null.ok = TRUE, add = checks)
+    if (!is.null(attach_object)) {
+      for (object in attach_object) {
+        checkmate::assert_file_exists(object, access = "r", add = checks)
+      }
+    }
     ## smtp_server
     checkmate::assert_string(smtp_server, min.chars = 5, max.chars = 256,
                              # pattern = "^[A-Z0-9.-]+\\.[A-Z]{2,}$", ignore.case = TRUE,
@@ -116,11 +147,12 @@ save_log <- function(log_file,
   ## SAVE LOG FILE IN ARCHIVE ----
   if (isTRUE(save)) {
     # Copy log-file renamed with date, to track history
-    log_ext <- ""
-    if (grepl(".", log_file, fixed = TRUE)) {
-      log_ext <- utils::tail(strsplit(x = log_file, split = ".", fixed = TRUE)[[1]], n = 1)
-      log_file_crude <- sub(paste0(".", log_ext, "$"), "", log_file)
-    }
+    log_file_crude <- tools::file_path_sans_ext(log_file)
+    # log_ext <- ""
+    # if (grepl(".", log_file, fixed = TRUE)) {
+    #   log_ext <- utils::tail(strsplit(x = log_file, split = ".", fixed = TRUE)[[1]], n = 1)
+    #   log_file_crude <- sub(paste0(".", log_ext, "$"), "", log_file)
+    # }
     file.copy(from = file.path(log_path, log_file),
               to = file.path(archive, paste0(log_file_crude, "_", format(Sys.Date(), "%Y%m%d"), ".Rout")),
               copy.date = TRUE,
@@ -129,33 +161,49 @@ save_log <- function(log_file,
 
   # COMPOSE EMAIL ----
   if (isTRUE(email)) {
-    # Message text and attachment
+    # Subject and body ----
+    # Start body message with include_text
+    body <- ifelse(!is.null(include_text), include_text, "")
+
+    # Include error and warning messages if any
+    dots1 <- intersect(setdiff(names(formals(gather_messages)), c("filename")), names(dots))
+    messages <- do.call(gather_messages,
+                        append(dots[dots1], list(filename = file.path(log_path, log_file))))
+
+    if (length(messages) > 0) {
+      # subject <- paste("Error when running:", log_file_crude)
+      subject <- paste("Error when running:", email_subject)
+      body <- c(body, "", "Error messages", messages)
+    } else {
+      # subject <- paste("Status for running:", log_file_crude)
+      subject <- paste("Status for running:", email_subject)
+    }
+
+    # Attachments ----
     # https://stackoverflow.com/questions/2885660/how-to-send-email-with-attachment-from-r-in-windows
     # key part for attachments, put the body and the mime_part in a list for msg
     attachment_object <- sendmailR::mime_part(x = file.path(log_path, log_file),
                                               name = log_file)
+    body <- list(body, attachment_object)
 
-    # Include error and warning messages if any
-    messages <- gather_messages(filename = file.path(log_path, log_file), ...)
-    if (length(messages) > 0) {
-      subject <- paste("Error when running:", log_file_crude)
-      body <- list(c("Error messages", messages), attachment_object)
-    } else {
-      subject <- paste("Status for running:", log_file_crude)
-      body <- list(attachment_object)
-    }
-
-    # INCLUDE ADDITIONAL INFORMATION ----
-    if (!is.null(additional_info)) {
-      body <- append(body, additional_info, after = 0)
+    # Attach more objects
+    if (!is.null(attach_object)) {
+      for (object in attach_object) {
+        filename <- utils::tail(strsplit(normalizePath(object, winslash = "/"), split = "/")[[1]], 1)
+        attachment_object <- sendmailR::mime_part(x = object, name = filename)
+        body <- append(body, attachment_object)
+      }
     }
 
     # SEND EMAIL ----
-    sendmailR::sendmail(from = from,
-                        to = to,
-                        subject = subject,
-                        msg = body,
-                        control = list(smtpServer = smtp_server),
-                        ...)
+    dots1 <- intersect(setdiff(names(formals(sendmailR::sendmail)),
+                               c("from", "to", "subject", "msg", "control")),
+                       names(dots))
+    do.call(sendmailR::sendmail, append(dots[dots1],
+                                        list(from = from,
+                                             to = to,
+                                             subject = subject,
+                                             msg = body,
+                                             control = list(smtpServer = smtp_server))))
   }
 }
