@@ -28,9 +28,9 @@ for more information.
 [GitHub](https://github.com/NorwegianVeterinaryInstitute). To install
 `NVIbatch` you will need:
 
--   R version &gt; 4.0.0
+-   R version &gt; 4.1.0
 -   R package `remotes`
--   Rtools version 4.0, 4.2 or 4.3 depending on R version
+-   Rtools version 4.0, 4.2, 4.3 or 4.4 depending on R version
 
 First install and attach the `remotes` package.
 
@@ -46,12 +46,13 @@ following code:
         build_vignettes = FALSE)
 
 To install (or update) the `NVIbatch` package with vignettes, you will
-need to first install some additional R-packages needed for creating the
+need to first install some additional R-packages needed to build the
 vignettes. Check README below in the section [Vignettes](#vignettes) to
 see which vignettes are available. To install the package with the
 vignettes, first install the packages: `knitr`, `rmarkdown`, `R.rsp`,
-and `NVIrpackages` (from GitHub) if they are missing. Then run the
-following code:
+and `NVIrpackages` (from GitHub) if they are missing. If you don’t use
+R-studio, you will also need to install Pandoc. Then run the following
+code:
 
     remotes::install_github("NorwegianVeterinaryInstitute/NVIbatch",
         upgrade = FALSE,

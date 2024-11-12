@@ -12,6 +12,7 @@ save_log(
   email = TRUE,
   from = NULL,
   to = NULL,
+  email_subject = tools::file_path_sans_ext(log_file),
   include_text = NULL,
   attach_object = NULL,
   smtp_server = NULL,
@@ -40,6 +41,10 @@ The email address of the sender. Defaults to \code{NULL}.}
 
 \item{to}{[\code{character}]\cr
 The email address' of the recipients. Defaults to \code{NULL}.}
+
+\item{email_subject}{[\code{character(1)}]\cr
+Text to include in subject after "Status for running:" or "Error when
+running:". Defaults to `log_file` without file extension.}
 
 \item{include_text}{[\code{character(1)}]\cr
 Text to include in the first part of the body of the email. Defaults to
