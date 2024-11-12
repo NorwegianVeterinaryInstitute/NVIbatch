@@ -1,4 +1,4 @@
-# NVIbatch 0.5.0.9001 - (2024-##-##)
+# NVIbatch 0.5.1 - (2024-11-12)
 
 ## New features:
 
