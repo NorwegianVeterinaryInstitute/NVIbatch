@@ -41,6 +41,9 @@
 #'     The email address of the sender. Defaults to \code{NULL}.
 #' @param to [\code{character}]\cr
 #'     The email address' of the recipients. Defaults to \code{NULL}.
+#' @param email_subject [\code{character(1)}]\cr
+#'     Text to include in subject after "Status for running:" or "Error when
+#'     running:". Defaults to `log_file` without file extension.
 #' @param include_text [\code{character(1)}]\cr
 #'     Text to include in the first part of the body of the email. Defaults to
 #'     \code{NULL}.
@@ -65,6 +68,7 @@ save_log <- function(log_file,
                      email = TRUE,
                      from = NULL,
                      to = NULL,
+                     email_subject = tools::file_path_sans_ext(log_file),
                      include_text = NULL,
                      attach_object = NULL,
                      smtp_server = NULL,
@@ -143,11 +147,12 @@ save_log <- function(log_file,
   ## SAVE LOG FILE IN ARCHIVE ----
   if (isTRUE(save)) {
     # Copy log-file renamed with date, to track history
-    log_ext <- ""
-    if (grepl(".", log_file, fixed = TRUE)) {
-      log_ext <- utils::tail(strsplit(x = log_file, split = ".", fixed = TRUE)[[1]], n = 1)
-      log_file_crude <- sub(paste0(".", log_ext, "$"), "", log_file)
-    }
+    log_file_crude <- tools::file_path_sans_ext(log_file)
+    # log_ext <- ""
+    # if (grepl(".", log_file, fixed = TRUE)) {
+    #   log_ext <- utils::tail(strsplit(x = log_file, split = ".", fixed = TRUE)[[1]], n = 1)
+    #   log_file_crude <- sub(paste0(".", log_ext, "$"), "", log_file)
+    # }
     file.copy(from = file.path(log_path, log_file),
               to = file.path(archive, paste0(log_file_crude, "_", format(Sys.Date(), "%Y%m%d"), ".Rout")),
               copy.date = TRUE,
@@ -166,12 +171,12 @@ save_log <- function(log_file,
                         append(dots[dots1], list(filename = file.path(log_path, log_file))))
 
     if (length(messages) > 0) {
-      subject <- paste("Error when running:", log_file_crude)
-      # body <- list(c("Error messages", messages), attachment_object)
+      # subject <- paste("Error when running:", log_file_crude)
+      subject <- paste("Error when running:", email_subject)
       body <- c(body, "", "Error messages", messages)
     } else {
-      subject <- paste("Status for running:", log_file_crude)
-      # body <- list(attachment_object)
+      # subject <- paste("Status for running:", log_file_crude)
+      subject <- paste("Status for running:", email_subject)
     }
 
     # Attachments ----
