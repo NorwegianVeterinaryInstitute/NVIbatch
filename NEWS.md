@@ -1,23 +1,8 @@
-# NVIbatch 0.5.1.9000 - (2024-##-##)
-
-## New features:
-
--
-
+# NVIbatch 0.5.2 - (2024-12-13)
 
 ## Bug fixes:
 
 - `use_NVIverse` sets `build_vignettes` = `FALSE` if necessary packages for building vignettes are not installed.
-
-
-## Other changes:
-
--
-
-
-## BREAKING CHANGES:
-
--
 
 
 # NVIbatch 0.5.1 - (2024-11-12)
