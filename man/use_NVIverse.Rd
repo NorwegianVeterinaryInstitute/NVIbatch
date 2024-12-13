@@ -20,8 +20,8 @@ use_NVIverse(
 Name of one or more \code{NVIverse} packages.}
 
 \item{auth_token}{[\code{character}]\cr
-To install \code{NVIconfig} a personal access token is needed. Generate a personal
-access token (PAT) in "https://github.com/settings/tokens" and
+To install \code{NVIconfig} a personal access token is needed. Generate a
+personal access token (PAT) in "https://github.com/settings/tokens" and
 supply to this argument. Defaults to \code{NULL}.}
 
 \item{dependencies}{[\code{logical(1) | character}]\cr
@@ -35,8 +35,8 @@ The dependencies to check and eventually install. Can be
 
 \item{upgrade}{[\code{logical(1) | character(1)}]\cr
 Should package dependencies be upgraded? One of c("ask", "always", "never").
-    \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
-    respectively. Defaults to \code{FALSE}.}
+    \code{TRUE} and \code{FALSE} are also accepted and correspond to
+    "always" and "never" respectively. Defaults to \code{FALSE}.}
 
 \item{build}{[\code{logical(1)}]\cr
 If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.}
@@ -47,7 +47,8 @@ If \code{FALSE}, don't build PDF manual ('--no-manual').
 
 \item{build_vignettes}{[\code{logical(1)}]\cr
 If \code{FALSE}, don't build package vignettes ("--no-build-vignettes").
-    Defaults to \code{TRUE}.}
+    Defaults to \code{TRUE}, but is set to \code{FALSE} if necessary packages
+    for building vignettes are not installed.}
 
 \item{\dots}{Other arguments to be passed to
 \ifelse{html}{\code{\link[remotes:install_github]{remotes::install_github}}}{\code{remotes::install_github}}.}
