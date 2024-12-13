@@ -7,7 +7,7 @@
 
 ## Bug fixes:
 
--
+- `use_NVIverse` sets `build_vignettes` = `FALSE` if necessary packages for building vignettes are not installed.
 
 
 ## Other changes:
