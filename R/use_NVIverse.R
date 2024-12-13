@@ -7,8 +7,8 @@
 #' @param pkg [\code{character}]\cr
 #'     Name of one or more \code{NVIverse} packages.
 #' @param auth_token [\code{character}]\cr
-#'     To install \code{NVIconfig} a personal access token is needed. Generate a personal
-#'     access token (PAT) in "https://github.com/settings/tokens" and
+#'     To install \code{NVIconfig} a personal access token is needed. Generate a
+#'     personal access token (PAT) in "https://github.com/settings/tokens" and
 #'     supply to this argument. Defaults to \code{NULL}.
 #' @param dependencies [\code{logical(1) | character}]\cr
 #' The dependencies to check and eventually install. Can be
@@ -20,8 +20,8 @@
 #'     and is the default.
 #' @param upgrade [\code{logical(1) | character(1)}]\cr
 #' Should package dependencies be upgraded? One of c("ask", "always", "never").
-#'     \code{TRUE} and \code{FALSE} are also accepted and correspond to "always" and "never"
-#'     respectively. Defaults to \code{FALSE}.
+#'     \code{TRUE} and \code{FALSE} are also accepted and correspond to
+#'     "always" and "never" respectively. Defaults to \code{FALSE}.
 #' @param build [\code{logical(1)}]\cr
 #' If \code{TRUE} build the package before installing. Defaults to \code{TRUE}.
 #' @param build_manual [\code{logical(1)}]\cr
@@ -29,7 +29,8 @@
 #'     Defaults to \code{FALSE}.
 #' @param build_vignettes [\code{logical(1)}]\cr
 #' If \code{FALSE}, don't build package vignettes ("--no-build-vignettes").
-#'     Defaults to \code{TRUE}.
+#'     Defaults to \code{TRUE}, but is set to \code{FALSE} if necessary packages
+#'     for building vignettes are not installed.
 #' @param \dots Other arguments to be passed to
 #'     \ifelse{html}{\code{\link[remotes:install_github]{remotes::install_github}}}{\code{remotes::install_github}}.
 
@@ -45,6 +46,20 @@ use_NVIverse <- function(pkg,
                          build_manual = FALSE,
                          build_vignettes = TRUE,
                          ...) {
+
+  # PREPARE ARGUMENTS BEFORE CHECKING ----
+  ## Change build_vignettes to FALSE if packages to build vignettes is lacking
+  ## Building the vignettes requires knitr, rmarkdown, R.rsp and NVIrpackages
+  if (isTRUE(build_vignettes)) {
+    if (!isTRUE(NVIcheckmate::check_package(x = "knitr")) |
+        !isTRUE(NVIcheckmate::check_package(x = "rmarkdown")) |
+        !isTRUE(NVIcheckmate::check_package(x = "R.rsp")) |
+        !isTRUE(NVIcheckmate::check_package(x = "NVIrpackages"))) {
+      warning("Vignettes are not built as necessary packages for building vignettes are not installed.")
+      build_vignettes <- FALSE
+    }
+  }
+
   # ARGUMENT CHECKING ----
   # Check that NVIcheckmate is installed to avoid using NVIcheckmate functions if not installed
   NVIcheckmate_installed <- FALSE
