@@ -1,7 +1,7 @@
 Package: NVIbatch
 Title: Tools to facilitate the running of R-scripts in batch mode at NVI
-Version: 0.5.2
-Date: 2024-12-13
+Version: 0.5.3
+Date: 2025-10-13
 Authors@R: 
   c(person(given = "Petter",
            family = "Hopp",
@@ -42,4 +42,4 @@ Remotes:
 Roxygen: list(markdown = FALSE)
 VignetteBuilder: knitr
 Language: en-GB
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
