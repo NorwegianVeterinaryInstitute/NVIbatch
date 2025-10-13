@@ -1,8 +1,6 @@
 #' @title Save and report log for scripts
 #' @description Reads the log file, identifies error messages and
-#'     sends an email with the status for running the main script.
-#'     The log file can be saved with the current date last in
-#'     file name.
+#'     saves the log file with the current date last in file name.
 #' @details The function collects warnings and error messages from
 #'     log file when a script has been run. The script must be set up
 #'     to produce the log file. There
@@ -13,18 +11,20 @@
 #'     file extension. This file should be permanently saved in an
 #'     archive directory for example a subdirectory named "batchlog".
 #'
-#' If an email should report the status, an email is produced. The
-#'     subject of the email indicates whether the script run without
-#'     problems or if warnings or error messages were produced. The
-#'     log file is attached the email. If there are warnings or error
-#'     messages, these are written in the email text.
+#' The function cannot send an email any more.
 #'
-#' It is possible include an short message first in the email text
-#'     by giving it as input to the argument \code{include_text}. Such
-#'     a message can give more information of the status of running the
-#'     script. Such a message can be produced by the script and saved.
-#'     Thereafter, the message can be fetched and be used as input to
-#'     \code{include_text}.
+# #' If an email should report the status, an email is produced. The
+# #'     subject of the email indicates whether the script run without
+# #'     problems or if warnings or error messages were produced. The
+# #'     log file is attached the email. If there are warnings or error
+# #'     messages, these are written in the email text.
+# #'
+# #' It is possible include an short message first in the email text
+# #'     by giving it as input to the argument \code{include_text}. Such
+# #'     a message can give more information of the status of running the
+# #'     script. Such a message can be produced by the script and saved.
+# #'     Thereafter, the message can be fetched and be used as input to
+# #'     \code{include_text}.
 #'
 #' @param log_file [\code{character(1)}]\cr
 #'     File name of the log file.
@@ -65,7 +65,7 @@ save_log <- function(log_file,
                      log_path,
                      save = TRUE,
                      archive = NULL,
-                     email = TRUE,
+                     email = FALSE,
                      from = NULL,
                      to = NULL,
                      email_subject = tools::file_path_sans_ext(log_file),
@@ -196,14 +196,14 @@ save_log <- function(log_file,
     }
 
     # SEND EMAIL ----
-    dots1 <- intersect(setdiff(names(formals(sendmailR::sendmail)),
-                               c("from", "to", "subject", "msg", "control")),
-                       names(dots))
-    do.call(sendmailR::sendmail, append(dots[dots1],
-                                        list(from = from,
-                                             to = to,
-                                             subject = subject,
-                                             msg = body,
-                                             control = list(smtpServer = smtp_server))))
+    # dots1 <- intersect(setdiff(names(formals(sendmailR::sendmail)),
+    #                            c("from", "to", "subject", "msg", "control")),
+    #                    names(dots))
+    # do.call(sendmailR::sendmail, append(dots[dots1],
+    #                                     list(from = from,
+    #                                          to = to,
+    #                                          subject = subject,
+    #                                          msg = body,
+    #                                          control = list(smtpServer = smtp_server))))
   }
 }

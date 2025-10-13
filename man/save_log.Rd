@@ -9,7 +9,7 @@ save_log(
   log_path,
   save = TRUE,
   archive = NULL,
-  email = TRUE,
+  email = FALSE,
   from = NULL,
   to = NULL,
   email_subject = tools::file_path_sans_ext(log_file),
@@ -66,9 +66,7 @@ None. Saves the log after a script has been run
 }
 \description{
 Reads the log file, identifies error messages and
-    sends an email with the status for running the main script.
-    The log file can be saved with the current date last in
-    file name.
+    saves the log file with the current date last in file name.
 }
 \details{
 The function collects warnings and error messages from
@@ -81,18 +79,7 @@ The log file will be renamed so that the current date in the
     file extension. This file should be permanently saved in an
     archive directory for example a subdirectory named "batchlog".
 
-If an email should report the status, an email is produced. The
-    subject of the email indicates whether the script run without
-    problems or if warnings or error messages were produced. The
-    log file is attached the email. If there are warnings or error
-    messages, these are written in the email text.
-
-It is possible include an short message first in the email text
-    by giving it as input to the argument \code{include_text}. Such
-    a message can give more information of the status of running the
-    script. Such a message can be produced by the script and saved.
-    Thereafter, the message can be fetched and be used as input to
-    \code{include_text}.
+The function cannot send an email any more.
 }
 \author{
 Petter Hopp Petter.Hopp@vetinst.no

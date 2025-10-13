@@ -1,3 +1,15 @@
+# NVIbatch 0.5.3 - (2025-10-13)
+
+## Bug fixes:
+
+- Silenced possibility for `save_log` to send emails. Kept input to avoid forcing rewriting scripts using the function.
+
+
+## BREAKING CHANGES:
+
+- `save_log` cannot send emails any more.
+
+
 # NVIbatch 0.5.2 - (2024-12-13)
 
 ## Bug fixes:
